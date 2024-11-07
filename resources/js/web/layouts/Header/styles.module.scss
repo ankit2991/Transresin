@@ -1,0 +1,9 @@
+header::before {
+    content: "";
+    height: 1px;
+    background-color: theme("colors.primary.300");
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+}

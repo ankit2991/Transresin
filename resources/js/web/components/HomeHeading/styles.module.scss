@@ -1,0 +1,18 @@
+.homeHeading {
+    position: relative;
+    &::after {
+        content: "";
+        height: 2px;
+        position: absolute;
+        background-color: theme("colors.primary.300");
+        left: 0;
+        right: 0;
+        top: 50%;
+        margin-top: -1px;
+        z-index: 0;
+    }
+    span {
+        position: relative;
+        z-index: 1;
+    }
+}

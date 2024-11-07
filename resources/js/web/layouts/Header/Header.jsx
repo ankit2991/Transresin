@@ -50,7 +50,7 @@ const Header = () => {
               <li key={index}>
                 <Link to={link.slug}>{link.name}</Link>
 
-                {link?.data?.length && (
+                {link?.data?.length ? (
                   <ul style={{ minWidth: "150px", top: "100%", left: 0 }}>
                     {link?.data.map((category) => (
                       <li key={category.id}>
@@ -82,7 +82,7 @@ const Header = () => {
                       </li>
                     ))}
                   </ul>
-                )}
+                ) : null}
               </li>
             ))}
             {navLinks?.map((link, index) => (

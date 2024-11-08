@@ -27,6 +27,12 @@ const IndustryCategoryPage = lazy(() =>
 const BrandsPage = lazy(() =>
   import("../admin/screens/BrandsScreen/BrandScreen")
 );
+const ProductsPage = lazy(() =>
+  import("../admin/screens/ProductScreen/ProductScreen")
+);
+const AddProductPage = lazy(() =>
+  import("../admin/screens/ProductScreen/AddProduct")
+);
 
 const AppRoutes = () => {
   const { isLoggedIn } = useSelector((state) => state?.auth);
@@ -59,6 +65,14 @@ const AppRoutes = () => {
               path="/transresin-panel/brands"
               element={<BrandsPage />}
             ></Route>
+            <Route
+              path="/transresin-panel/products"
+              element={<ProductsPage />}
+            ></Route>
+            <Route
+              path="/transresin-panel/add-product"
+              element={<AddProductPage />}
+            />
           </Route>
           <Route path="/" element={<WebLayout />}>
             <Route index element={<HomeScreen />} />

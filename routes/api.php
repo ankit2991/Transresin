@@ -28,11 +28,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [LoginController::class, 'doLogin']);
 
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/category', [CategoryController::class, 'index']);
-Route::get('/application', [ApplicationController::class, 'index']);
-Route::get('/industry', [IndustryCategoryController::class, 'index']);
-Route::get('/brand', [BrandsController::class, 'index']);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -47,3 +42,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'product' => ProductController::class,
     ]);
 });
+
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/category', [CategoryController::class, 'index']);
+Route::get('/product', [ProductController::class, 'index']);
+Route::get('/application', [ApplicationController::class, 'index']);
+Route::get('/industry', [IndustryCategoryController::class, 'index']);
+Route::get('/brand', [BrandsController::class, 'index']);

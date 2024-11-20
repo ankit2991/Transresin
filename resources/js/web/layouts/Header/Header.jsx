@@ -6,7 +6,6 @@ import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  // const [menus, setMenus] = useState([]);
   const { menus } = useSelector((state) => state?.home);
 
   return (

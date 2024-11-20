@@ -22,7 +22,7 @@ export const navLinks = [
   // },
   {
     label: "Product Finder",
-    target: "/",
+    target: "/product",
   },
   {
     label: "About Us",

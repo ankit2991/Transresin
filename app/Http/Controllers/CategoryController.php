@@ -14,10 +14,18 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $query = Category::query();
+
+        if (!empty($request->search)) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%" . $request->search . "%");
+            });
+        }
+
         if ($request?->type == "dropdown") {
-            $categories = Category::with(['children'])->orderBy('name')->whereNull('parent_category_id')->get();
+            $categories = $query->with(['children'])->orderBy('name')->whereNull('parent_category_id')->get();
         } else
-            $categories = Category::with(['parent'])->latest()->paginate(request()->limit ?: 10);
+            $categories = $query->with(['parent'])->latest()->paginate(request()->limit ?: 10);
 
         return response()->json($categories);
     }

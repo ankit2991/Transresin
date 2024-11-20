@@ -18,7 +18,7 @@ class HomeController extends Controller
 
         $industyCategories = IndustryCategory::with(['children'])->orderBy('name')->whereNull('parent_industry_id')->get();
 
-        $brands = Brands::with(['children'])->orderBy('name')->whereNull('parent_brand_id')->get();
+        $brands = Brands::orderBy('name')->get();
 
         $resArr = [
             [

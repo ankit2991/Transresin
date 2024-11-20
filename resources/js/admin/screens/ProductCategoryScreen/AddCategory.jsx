@@ -6,15 +6,13 @@ import ApiExecute from "../../../api";
 import ImagePicker from "../../components/ImagePicker";
 
 const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
-  const [imagePreview, setImagePreview] = useState(initialData?.image || null);
-  const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        const apiResponse = await ApiExecute("category");
+        const apiResponse = await ApiExecute("category?type=dropdown");
 
         if (apiResponse.status) setCategories(apiResponse.data);
 
@@ -27,24 +25,8 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
     fetchCategories();
   }, []);
 
-  const handleImageChange = (e) => {
-    const [file] = e.target.files;
-    if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
-
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    // const formData = new FormData();
-    // for (const field in values) formData.append(field, values[field]);
-    // if (image) formData.append("image", image);
-
     let url = initialData ? `category/${initialData.slug}` : "category";
-
-    // if (initialData) {
-    //   formData.append("_method", "PUT");
-    // }
 
     let apiResponse = await ApiExecute(url, {
       method: "POST",
@@ -98,7 +80,7 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
                     id="parent_category_id"
                   >
                     <option value="">ROOT</option>
-                    {categories?.data?.map((category) => (
+                    {categories?.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
@@ -110,24 +92,6 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
               </div>
               <div className="w-[30%]">
                 <div className="mb-4">
-                  {/* <label className="form-label" htmlFor="image">
-                    Choose Image
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="custom-input"
-                    id="image"
-                  />
-                  {imagePreview && (
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="mt-2 h-24 object-cover"
-                    />
-                  )} */}
-
                   <ImagePicker
                     width={256}
                     height={256}

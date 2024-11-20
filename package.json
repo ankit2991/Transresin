@@ -18,11 +18,16 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
         "@fancyapps/ui": "^5.0.36",
         "@heroicons/react": "^2.1.5",
         "@imgly/background-removal": "^1.5.5",
+        "@mui/material": "^6.1.7",
         "@reduxjs/toolkit": "^2.3.0",
         "formik": "^2.4.6",
+        "lodash": "^4.17.21",
+        "postcss-scss": "^4.0.9",
         "react-easy-crop": "^5.1.0",
         "react-icons": "^5.3.0",
         "react-redux": "^9.1.2",

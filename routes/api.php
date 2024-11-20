@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HsnCodeController;
 use App\Http\Controllers\IndustryCategoryController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,15 +39,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [LoginController::class, 'doLogout']);
 
     Route::apiResources([
-        'category' => CategoryController::class
-    ]);
-    Route::apiResources([
-        'application' => ApplicationController::class
-    ]);
-    Route::apiResources([
-        'industry' => IndustryCategoryController::class
-    ]);
-    Route::apiResources([
-        'brand' => BrandsController::class
+        'category' => CategoryController::class,
+        'application' => ApplicationController::class,
+        'industry' => IndustryCategoryController::class,
+        'brand' => BrandsController::class,
+        'hsn-code' => HsnCodeController::class,
+        'product' => ProductController::class,
     ]);
 });

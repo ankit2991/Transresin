@@ -173,9 +173,8 @@ const ImagePicker = ({
                   />
                 </div>
                 <button
-                  style={{ display: "flex", alignItems: "center" }} // Flex container
                   onClick={doneCropping}
-                  className="btn-outline-primary"
+                  className="flex items-center px-3 py-1 border border-gray-600 hover:bg-primary-600 rounded-md"
                 >
                   <BiCheck style={{ marginRight: 4 }} /> Crop Image
                 </button>

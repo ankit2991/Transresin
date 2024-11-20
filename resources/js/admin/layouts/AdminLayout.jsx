@@ -5,13 +5,13 @@ import Sidebar from "./Sidebar/Sidebar";
 
 const AdminLayout = () => {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <aside>
         <Sidebar />
       </aside>
       <section className="flex-1 flex flex-col">
         <Header />
-        <main>
+        <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
         <footer></footer>

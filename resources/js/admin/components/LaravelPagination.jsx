@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const LaravelPagination = ({ children, items, fetchData, setLimit, limit }) => {
   const handlePagination = (e, pageNo) => {
     e.preventDefault();
@@ -65,6 +63,8 @@ const LaravelPagination = ({ children, items, fetchData, setLimit, limit }) => {
       </button>
     );
   }
+
+  if (!items.total) return <div>No records found.</div>;
 
   return (
     <>

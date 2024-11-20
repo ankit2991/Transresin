@@ -3,7 +3,6 @@ import ApiExecute from "../../../api";
 import Actions from "../../components/Actions";
 import swal from "sweetalert";
 import LaravelPagination from "../../components/LaravelPagination";
-import AddProduct from "./AddProduct";
 import { Link } from "react-router-dom";
 
 const ProductScreen = () => {
@@ -11,36 +10,36 @@ const ProductScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [entries, setEntries] = useState(10);
   const [search, setSearch] = useState("");
-  const [categories, setCategories] = useState({});
+  const [products, setProducts] = useState({});
 
   const [limit, setLimit] = useState(10);
 
-  const toggleModal = (category = null) => {
-    setSelectedCategory(category);
+  const toggleModal = (product = null) => {
+    setSelectedCategory(product);
     setIsModalOpen(!isModalOpen);
   };
 
-  const fetchCategories = useCallback(
+  const fetchProducts = useCallback(
     async (page = 1) => {
       const apiResponse = await ApiExecute(
-        `category?page=${page}&limit=${limit}`
+        `product?page=${page}&limit=${limit}`
       );
 
-      if (apiResponse.status) setCategories(apiResponse.data);
+      if (apiResponse.status) setProducts(apiResponse.data);
     },
     [limit]
   );
 
-  const deleteCategory = async (categorySlug) => {
+  const deleteCategory = async (productSlug) => {
     swal({
       title: "Are you sure?",
-      text: "Are you sure you want to delete this category?",
+      text: "Are you sure you want to delete this product?",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-        const apiResponse = await ApiExecute(`category/${categorySlug}`, {
+        const apiResponse = await ApiExecute(`product/${productSlug}`, {
           method: "POST",
           data: {
             _method: "DELETE",
@@ -48,11 +47,11 @@ const ProductScreen = () => {
         });
         if (apiResponse.status) {
           swal("Deleted!", "Category deleted successfully!", "success");
-          fetchCategories(); // Reload categories after deletion
+          fetchProducts(); // Reload products after deletion
         } else {
           swal(
             "OOPS!",
-            "Failed to delete the category. Please try again.",
+            "Failed to delete the product. Please try again.",
             "warning"
           );
         }
@@ -61,23 +60,13 @@ const ProductScreen = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    fetchProducts();
+  }, [fetchProducts]);
 
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-4">
-          <select
-            value={entries}
-            onChange={(e) => setEntries(e.target.value)}
-            className="border border-gray-300 rounded-lg p-2"
-          >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
           <input
             type="text"
             placeholder="Search here..."
@@ -95,56 +84,97 @@ const ProductScreen = () => {
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">All Categories</h2>
+        <h2 className="text-2xl font-semibold mb-4">All Products</h2>
+        {/* {JSON.stringify(products.data)} */}
         <LaravelPagination
-          items={categories}
-          fetchData={fetchCategories}
+          items={products}
+          fetchData={fetchProducts}
           limit={limit}
           setLimit={setLimit}
         >
           <table className="min-w-full mt-4">
             <thead>
               <tr>
-                <th className="border-b px-4 py-3 text-left">Sr. No.</th>
-                <th className="border-b px-4 py-3 text-left">Product Name</th>
-                <th className="border-b px-4 py-3 text-left">Category Name</th>
-                <th className="border-b px-4 py-3 text-left">
-                  Application Name
+                <th className="border-b px-4 py-3 text-left">S.No.</th>
+                <th className="border-b px-4 py-3 text-left" colSpan={2}>
+                  Item Details
                 </th>
-                <th className="border-b px-4 py-3 text-left">
-                  Industry Category Name
-                </th>
-                <th className="border-b px-4 py-3 text-left">Brand Name</th>
-                <th className="border-b px-4 py-3 text-left">Icon</th>
+                <th className="border-b px-4 py-3 text-left">Attributes</th>
+                <th className="border-b px-4 py-3 text-left">Price</th>
                 <th className="border-b px-4 py-3 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
-              {categories?.data?.map((category, index) => {
-                const hasChildren = categories.data.some(
-                  (cat) => cat.parent?.id === category.id
+              {products?.data?.map((product, index) => {
+                const hasChildren = products.data.some(
+                  (cat) => cat.parent?.id === product.id
                 );
                 return (
                   <tr key={index}>
                     <td className="border-b px-4 py-3">
-                      {index + categories.from}.
-                    </td>
-                    <td className="border-b px-4 py-3">{category.name}</td>
-                    <td className="border-b px-4 py-3">
-                      {category?.parent?.name || "ROOT"}
+                      {index + products.from}.
                     </td>
                     <td className="border-b px-4 py-3">
                       <img
-                        src={category.image}
+                        src={product.image}
                         alt=""
-                        className="size-10 rounded border border-3 border-black object-contain"
+                        className="size-24 rounded border border-3 border-black object-contain"
                       />
+                    </td>
+                    <td className="border-b px-4 py-3">
+                      <div>
+                        <div className="font-bold text-lg capitalize whitespace-nowrap">
+                          {product.name}
+                        </div>
+                        <div className="text-sm">
+                          <div>
+                            <strong>HSN: </strong> {product.hsn_code?.code}
+                          </div>
+                          <div>
+                            <strong>GST: </strong> {product.hsn_code?.gst_rate}%
+                          </div>
+                          <div>
+                            <strong>HSN: </strong> {product.hsn_code?.code}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="border-b px-4 py-3 text-sm">
+                      <div>
+                        <strong>Category: </strong> {product.category?.name}
+                      </div>
+                      <div>
+                        <strong>Industry: </strong>{" "}
+                        {product.industry_category?.name}
+                      </div>
+                      <div>
+                        <strong>Application: </strong>{" "}
+                        {product.application?.name}
+                      </div>
+                      <div>
+                        <strong>Brand: </strong> {product.brand?.name}
+                      </div>
+                    </td>
+                    <td className="border-b px-4 py-3">
+                      <div>
+                        <div className="text-sm">
+                          <div>
+                            <strong>Regular: </strong> ₹{product.regular_price}
+                          </div>
+                          <div>
+                            <strong>Discount: </strong> {product.discount}%
+                          </div>
+                          <div>
+                            <strong>Trade Price: </strong>₹{product.trade_price}
+                          </div>
+                        </div>
+                      </div>
                     </td>
                     <td className="border-b px-4 py-3">
                       <Actions
                         preventDelete={hasChildren}
-                        editCallback={() => toggleModal(category)}
-                        deleteCallback={() => deleteCategory(category.slug)}
+                        editCallback={() => toggleModal(product)}
+                        deleteCallback={() => deleteCategory(product.slug)}
                       />
                     </td>
                   </tr>

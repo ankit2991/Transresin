@@ -7,9 +7,7 @@ const HomeSale = React.lazy(() => import("./HomeSale"));
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Fancybox from "../../components/Fancybox";
 import { BiPlayCircle } from "react-icons/bi";
-import { BsFillStarFill, BsStar } from "react-icons/bs";
-import { FaLongArrowAltRight } from "react-icons/fa";
-import { PiFacebookLogoFill } from "react-icons/pi";
+import { BsFillStarFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 
 const HomeScreen = () => {
@@ -50,10 +48,10 @@ const HomeScreen = () => {
       </Suspense>
 
       <section className="py-16 bg-white">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-3">
           <HomeHeading>Videos</HomeHeading>
           <Fancybox>
-            <div className="grid grid-cols-3 gap-5">
+            <div className="grid lg:grid-cols-3 gap-5">
               <a
                 href="https://www.youtube.com/watch?v=MdPemLJ99YI"
                 className="rounded-lg overflow-hidden border relative gallery"
@@ -99,10 +97,10 @@ const HomeScreen = () => {
       </section>
 
       <section className="py-16">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-3">
           <HomeHeading>REVIEWS</HomeHeading>
 
-          <div className="grid lg:grid-cols-4 gap-10">
+          <div className="grid lg:grid-cols-4 grid-cols-2 lg:gap-10 gap-3">
             <div className="bg-white rounded p-3 text-center">
               <img
                 src="https://plus.unsplash.com/premium_photo-1683121366070-5ceb7e007a97?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
@@ -203,7 +201,7 @@ const HomeScreen = () => {
       </section>
 
       <section className="py-16 bg-white">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-3">
           <HomeHeading>ABOUT US</HomeHeading>
 
           <div className="grid lg:grid-cols-2 gap-10">
@@ -226,7 +224,7 @@ const HomeScreen = () => {
               </p>
             </div>
             <div>
-              <div className="grid lg:grid-cols-3 gap-10 text-center">
+              <div className="grid grid-cols-3 lg:gap-10 gap-3 text-sm lg:text-lg text-center">
                 <div>
                   <div className="size-24 bg-primary-300 rounded-full inline-flex justify-center items-center text-3xl font-bold text-white ">
                     2

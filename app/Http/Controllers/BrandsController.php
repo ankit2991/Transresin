@@ -15,7 +15,7 @@ class BrandsController extends Controller
     public function index(Request $request)
     {
         if ($request?->type == "dropdown") {
-            $brands = Brands::with(['children'])->orderBy('name')->whereNull('parent_brand_id')->get();
+            $brands = Brands::with(['children'])->orderBy('name')->get();
         } else
             $brands = Brands::with(['parent'])->latest()->paginate(request()->limit ?: 10);
 

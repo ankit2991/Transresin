@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminLayout from "../admin/layouts/AdminLayout";
 import Dashboard from "../admin/screens/Dashboard";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "@mui/material";
+import MobileLayout from "../mobile/layouts/MobileLayout";
 
 const WebLayout = lazy(() => import("../web/layouts/WebLayout"));
 const HomeScreen = lazy(() => import("../web/screens/HomeScreen"));
@@ -33,6 +35,9 @@ const ProductsPage = lazy(() =>
 const AddProductPage = lazy(() =>
   import("../admin/screens/ProductScreen/AddProduct")
 );
+const HsnCodeScreen = lazy(() =>
+  import("../admin/screens/hsnCode/HsnCodeScreen")
+);
 
 const AppRoutes = () => {
   const { isLoggedIn } = useSelector((state) => state?.auth);
@@ -40,6 +45,9 @@ const AppRoutes = () => {
   const ProtectedRoute = ({ component: Component }) => {
     return isLoggedIn ? <Component /> : <AdminLoginScreen />;
   };
+
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading</div>}>
@@ -49,39 +57,39 @@ const AppRoutes = () => {
             element={<ProtectedRoute component={AdminLayout} />}
           >
             <Route index element={<Dashboard />} />
+            <Route path="product-category" element={<ProductCategoryPage />} />
             <Route
-              path="/transresin-panel/product-category"
-              element={<ProductCategoryPage />}
-            />
-            <Route
-              path="/transresin-panel/product-application"
+              path="product-application"
               element={<ProductApplicationPage />}
             />
             <Route
-              path="/transresin-panel/industry-category"
+              path="industry-category"
               element={<IndustryCategoryPage />}
             ></Route>
-            <Route
-              path="/transresin-panel/brands"
-              element={<BrandsPage />}
-            ></Route>
-            <Route
-              path="/transresin-panel/products"
-              element={<ProductsPage />}
-            ></Route>
-            <Route
-              path="/transresin-panel/add-product"
-              element={<AddProductPage />}
-            />
+            <Route path="brands" element={<BrandsPage />}></Route>
+            <Route path="hsn-code" element={<HsnCodeScreen />}></Route>
+            <Route path="products" element={<ProductsPage />}></Route>
+            <Route path="add-product" element={<AddProductPage />} />
           </Route>
-          <Route path="/" element={<WebLayout />}>
-            <Route index element={<HomeScreen />} />
-            <Route path="product" element={<ProductDetail />} />
-            <Route path="cart" element={<CartScreen />} />
-            <Route path="login" element={<LoginScreen />} />
-            <Route path="signup" element={<SignUpScreen />} />
-            <Route path="contact" element={<ContactUsScreen />} />
-          </Route>
+          {isMobile ? (
+            <Route path="/" element={<MobileLayout />}>
+              <Route index element={<HomeScreen />} />
+              <Route path="product" element={<ProductDetail />} />
+              <Route path="cart" element={<CartScreen />} />
+              <Route path="login" element={<LoginScreen />} />
+              <Route path="signup" element={<SignUpScreen />} />
+              <Route path="contact" element={<ContactUsScreen />} />
+            </Route>
+          ) : (
+            <Route path="/" element={<WebLayout />}>
+              <Route index element={<HomeScreen />} />
+              <Route path="product" element={<ProductDetail />} />
+              <Route path="cart" element={<CartScreen />} />
+              <Route path="login" element={<LoginScreen />} />
+              <Route path="signup" element={<SignUpScreen />} />
+              <Route path="contact" element={<ContactUsScreen />} />
+            </Route>
+          )}
         </Routes>
       </Suspense>
     </BrowserRouter>

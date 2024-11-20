@@ -1,36 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { Field, Form, Formik } from "formik";
 import ApiExecute from "../../../api";
-import SeoMeta from "../../layouts/Modal/SeoMeta";
+import Step1 from "./Step1";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
+import Step4 from "./Step4";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const AddProduct = ({ afterSubmit, initialData = null }) => {
+const AddProduct = ({ initialData = null }) => {
+  const [step, setStep] = useState(1);
   const [categories, setCategories] = useState([]);
   const [applications, setApplications] = useState([]);
   const [industryCategories, setIndustryCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [hsnCodes, setHsnCodes] = useState([]);
+  const [formData, setFormData] = useState({
+    name: initialData?.name || "",
+    category_id: initialData?.category_id || "",
+    sub_category_id: initialData?.sub_category_id || "",
+    application_id: initialData?.application_id || "",
+    sub_application_id: initialData?.sub_application_id || "",
+    industry_category_id: initialData?.industry_category_id || "",
+    sub_industry_category_id: initialData?.sub_industry_category_id || "",
+    brand_id: initialData?.brand_id || "",
+    seo_title: initialData?.seo_title || "",
+    seo_keywords: initialData?.seo_keywords || "",
+    seo_description: initialData?.seo_description || "",
+    image: "",
+    images: [],
+  });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
-        const categoryResponse = await ApiExecute("category");
-        const applicationResponse = await ApiExecute("application");
-        const industryCategoryResponse = await ApiExecute("industry-category");
-        const brandResponse = await ApiExecute("brand");
+        const categoryResponse = await ApiExecute("category?type=dropdown");
+        const applicationResponse = await ApiExecute(
+          "application?type=dropdown"
+        );
+        const industryCategoryResponse = await ApiExecute(
+          "industry?type=dropdown"
+        );
+        const brandResponse = await ApiExecute("brand?type=dropdown");
+        const hsnCodesResponse = await ApiExecute("hsn-code?type=dropdown");
 
-        setCategories(
-          Array.isArray(categoryResponse.data) ? categoryResponse.data : []
-        );
-        setApplications(
-          Array.isArray(applicationResponse.data)
-            ? applicationResponse.data
-            : []
-        );
-        setIndustryCategories(
-          Array.isArray(industryCategoryResponse.data)
-            ? industryCategoryResponse.data
-            : []
-        );
-        setBrands(Array.isArray(brandResponse.data) ? brandResponse.data : []);
+        setCategories(categoryResponse.data);
+        setApplications(applicationResponse.data);
+        setIndustryCategories(industryCategoryResponse.data);
+        setBrands(brandResponse.data);
+        setHsnCodes(hsnCodesResponse?.data);
       } catch (error) {
         console.error("Error fetching dropdown data:", error);
       }
@@ -39,26 +58,24 @@ const AddProduct = ({ afterSubmit, initialData = null }) => {
     fetchDropdownData();
   }, []);
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  const handleFinalSubmit = async () => {
     const url = initialData ? `product/${initialData.slug}` : "product";
 
     try {
       const apiResponse = await ApiExecute(url, {
         method: "POST",
         data: {
-          ...values,
+          ...formData,
           _method: initialData ? "PUT" : "POST",
         },
       });
 
       if (apiResponse.status) {
-        resetForm();
-        afterSubmit && afterSubmit();
+        toast.success(apiResponse.data?.message);
+        navigate("/transresin-panel/products");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -67,177 +84,61 @@ const AddProduct = ({ afterSubmit, initialData = null }) => {
       <h1 className="text-2xl font-semibold mb-6">
         {initialData ? "Edit Product" : "Add Product"}
       </h1>
-      <Formik
-        initialValues={{
-          productName: initialData?.productName || "",
-          productCategory: initialData?.productCategory || "",
-          productSubcategory: initialData?.productSubcategory || "",
-          productApplication: initialData?.productApplication || "",
-          productSubapplication: initialData?.productSubapplication || "",
-          productIndustryCategory: initialData?.productIndustryCategory || "",
-          productIndustrySubcategory:
-            initialData?.productIndustrySubcategory || "",
-          productBrand: initialData?.productBrand || "",
-          seoTitle: initialData?.seoTitle || "",
-          seoKeywords: initialData?.seoKeywords || "",
-          seoDescription: initialData?.seoDescription || "",
-        }}
-        enableReinitialize
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Product Name */}
-              <div>
-                <label className="form-label">Product Name</label>
-                <Field
-                  name="productName"
-                  className="form-input"
-                  placeholder="Enter product name"
-                />
-              </div>
 
-              {/* Product Category */}
-              <div>
-                <label className="form-label">Product Category</label>
-                <Field
-                  as="select"
-                  name="productCategory"
-                  className="form-input"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
+      {step === 1 && (
+        <Step1
+          categories={categories}
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+        />
+      )}
+      {step === 2 && (
+        <Step2
+          applications={applications}
+          industryCategories={industryCategories}
+          brands={brands}
+          hsnCodes={hsnCodes}
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+        />
+      )}
+      {step === 3 && (
+        <Step3
+          initialValues={formData}
+          initialData={initialData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+        />
+      )}
+      {step === 4 && (
+        <Step4
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            handleFinalSubmit();
+          }}
+        />
+      )}
 
-              {/* Product Subcategory */}
-              <div>
-                <label className="form-label">Product Subcategory</label>
-                <Field
-                  as="select"
-                  name="productSubcategory"
-                  className="form-input"
-                >
-                  <option value="">Select Subcategory</option>
-                  {categories?.map((category) =>
-                    category.subcategories?.map((sub) => (
-                      <option key={sub.id} value={sub.id}>
-                        {sub.name}
-                      </option>
-                    ))
-                  )}
-                </Field>
-              </div>
-
-              {/* Product Application */}
-              <div>
-                <label className="form-label">Product Application</label>
-                <Field
-                  as="select"
-                  name="productApplication"
-                  className="form-input"
-                >
-                  <option value="">Select Application</option>
-                  {applications?.map((app) => (
-                    <option key={app.id} value={app.id}>
-                      {app.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              {/* Product Subapplication */}
-              <div>
-                <label className="form-label">Product Subapplication</label>
-                <Field
-                  as="select"
-                  name="productSubapplication"
-                  className="form-input"
-                >
-                  <option value="">Select Subapplication</option>
-                  {applications?.map((app) =>
-                    app.subapplications?.map((subApp) => (
-                      <option key={subApp.id} value={subApp.id}>
-                        {subApp.name}
-                      </option>
-                    ))
-                  )}
-                </Field>
-              </div>
-
-              {/* Industry Category */}
-              <div>
-                <label className="form-label">Industry Category</label>
-                <Field
-                  as="select"
-                  name="productIndustryCategory"
-                  className="form-input"
-                >
-                  <option value="">Select Industry Category</option>
-                  {industryCategories?.map((industry) => (
-                    <option key={industry.id} value={industry.id}>
-                      {industry.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              {/* Industry Subcategory */}
-              <div>
-                <label className="form-label">Industry Subcategory</label>
-                <Field
-                  as="select"
-                  name="productIndustrySubcategory"
-                  className="form-input"
-                >
-                  <option value="">Select Industry Subcategory</option>
-                  {industryCategories?.map((industry) =>
-                    industry.subcategories?.map((sub) => (
-                      <option key={sub.id} value={sub.id}>
-                        {sub.name}
-                      </option>
-                    ))
-                  )}
-                </Field>
-              </div>
-
-              {/* Product Brand */}
-              <div>
-                <label className="form-label">Product Brand</label>
-                <Field as="select" name="productBrand" className="form-input">
-                  <option value="">Select Brand</option>
-                  {brands?.map((brand) => (
-                    <option key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </option>
-                  ))}
-                </Field>
-              </div>
-
-              <SeoMeta />
-            </div>
-
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                disabled={isSubmitting}
-              >
-                {isSubmitting
-                  ? "Processing..."
-                  : initialData
-                  ? "Update Product"
-                  : "Save Product"}
-              </button>
-            </div>
-          </Form>
+      <div className="flex justify-between mt-4">
+        {step > 1 && (
+          <button
+            type="button"
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+            onClick={() => setStep(step - 1)}
+          >
+            Previous
+          </button>
         )}
-      </Formik>
+      </div>
     </div>
   );
 };

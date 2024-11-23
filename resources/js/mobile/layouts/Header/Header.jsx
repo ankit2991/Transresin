@@ -1,96 +1,88 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { navLinks } from "./navlinks";
 import "./styles.module.scss";
-import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { BiMenu, BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
 
 const Header = () => {
-  // const [menus, setMenus] = useState([]);
-  const { menus } = useSelector((state) => state?.home);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <>
-      <header className="relative text-center">
-        <div className="container mx-auto relative">
-          <div className="absolute left-0 top-0">
-            <img src="/images/present_logo.png" alt="" className="max-h-12" />
+    <div className="overflow-x-hidden w-full">
+      {/* Header for Mobile View */}
+      <header className="relative bg-white shadow-md w-full">
+        <div className="flex items-center justify-between px-4 py-3 w-full">
+          {/* Left: Menu Icon */}
+          <button
+            className="text-blue-900"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <BiMenu size={28} />
+          </button>
+
+          {/* Left: Logo aligned with Menu Icon */}
+          <div className="flex items-center gap-2">
+            <Link to="/">
+              <img src="/images/logo.png" alt="Logo" />
+            </Link>
           </div>
-          <Link to="/" className="mt-10 inline-block">
+
+          {/* Top Right Section: Present Logo */}
+          <div className="absolute top-2 right-4">
             <img
-              src="/images/logo.png"
-              alt=""
-              loading="lazy"
-              className="max-h-16 inline-block"
+              src="/images/present_logo.png"
+              alt="Present Logo"
+              className="h-6"
             />
-          </Link>
-          <div className="lg:flex items-end">
-            <div className="ml-auto mb-5 flex gap-3 text-primary text-primary-300">
-              <Link to="/" className="hover:text-primary-600">
-                <BiSearch size={30} />
-              </Link>
-              <Link to="/cart" className="hover:text-primary-600">
-                <BiShoppingBag size={30} />
-              </Link>
-              <Link
-                to="/login"
-                className="flex items-center hover:text-primary-600"
-              >
-                <BiUser size={30} /> Sign In
-              </Link>
-            </div>
           </div>
+        </div>
+
+        {/* Right Section: Icons */}
+        <div className="flex justify-end items-center space-x-6 px-4 pb-3 text-blue-700">
+          <Link to="/" className="hover:text-blue-900">
+            <BiSearch size={24} />
+          </Link>
+          <Link to="/cart" className="hover:text-blue-900">
+            <BiShoppingBag size={24} />
+          </Link>
+          <Link to="/login" className="hover:text-blue-900">
+            <BiUser size={24} />
+          </Link>
+        </div>
+
+        {/* Search Bar */}
+        <div className="bg-blue-100 px-4 py-2 w-full">
+          <input
+            type="text"
+            placeholder="Search for Products, Brands and More"
+            className="w-full rounded-lg py-2 px-4 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </header>
 
-      <nav className="bg-blue-950 text-white sticky top-0 z-50">
-        <div className="container mx-auto">
-          <ul className="main-navbar">
-            {menus?.map((link, index) => (
-              <li key={index}>
-                <Link to={link.slug}>{link.name}</Link>
-
-                {link?.data?.length ? (
-                  <ul className="min-w-[150px] top-full start-0 w-max">
-                    {link?.data.map((category) => (
-                      <li key={category.id}>
-                        <Link
-                          to={`/category/${category.id}`}
-                          className="flex items-center"
-                        >
-                          <img
-                            src={category.image}
-                            alt=""
-                            className="size-8 inline-block rounded-full"
-                          />
-                          <div className="ml-2">{category.name}</div>
-                        </Link>
-                        {category?.children?.length ? (
-                          <ul>
-                            {category?.children?.map((subCategory) => (
-                              <li key={subCategory.id}>
-                                <Link to={`/category/${subCategory.id}`}>
-                                  {subCategory.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
+      {/* Drawer Menu */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-blue-950 text-white z-50 w-full overflow-hidden">
+          <div className="flex flex-col p-4 space-y-3">
+            <button
+              className="self-end text-white"
+              onClick={() => setMenuOpen(false)}
+            >
+              Close
+            </button>
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.target}
+                className="block py-2 px-3 hover:bg-blue-800 rounded w-full"
+              >
+                {link.label}
+              </Link>
             ))}
-            {navLinks?.map((link, index) => (
-              <li key={index}>
-                <Link to={link.target}>{link.label}</Link>
-              </li>
-            ))}
-          </ul>
+          </div>
         </div>
-      </nav>
-    </>
+      )}
+    </div>
   );
 };
 

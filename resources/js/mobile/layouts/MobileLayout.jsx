@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import ApiExecute from "../../api";
 import { useDispatch } from "react-redux";
 import { setMenus } from "../../redux/actions/homeActions";
+import Header from "./Header";
 
 const MobileLayout = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const MobileLayout = () => {
 
   return (
     <>
+      <Header />
       <Outlet />
     </>
   );

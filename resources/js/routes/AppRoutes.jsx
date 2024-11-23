@@ -85,8 +85,8 @@ const AppRoutes = () => {
           ) : (
             <Route path="/" element={<WebLayout />}>
               <Route index element={<HomeScreen />} />
-              <Route path="product/:slug" element={<ProductDetail />} />
               <Route path="product" element={<ProductScreen />} />
+              <Route path="product/:slug" element={<ProductDetail />} />
               <Route path="cart" element={<CartScreen />} />
               <Route path="login" element={<LoginScreen />} />
               <Route path="signup" element={<SignUpScreen />} />

@@ -49,3 +49,4 @@ Route::get('/product', [ProductController::class, 'index']);
 Route::get('/application', [ApplicationController::class, 'index']);
 Route::get('/industry', [IndustryCategoryController::class, 'index']);
 Route::get('/brand', [BrandsController::class, 'index']);
+Route::post('/cart', [ProductController::class, 'cart']);

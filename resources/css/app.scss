@@ -8,6 +8,10 @@
   }
 }
 
+.btn-primary {
+  @apply bg-primary-300 text-white px-5 py-2 mt-5 rounded hover:bg-primary-600 flex gap-2 items-center;
+}
+
 .form-label {
   @apply block text-gray-700 mb-2;
 }

@@ -236,4 +236,19 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product deleted successfully']);
     }
+
+    public function cart(Request $request)
+    {
+        $cartItems = [];
+
+        if (!empty($request->cartItems)) {
+            foreach ($request->cartItems as $pId => $qty) {
+                $product = Product::select('id', 'name', 'image', 'regular_price', 'trade_price', 'description')->find($pId);
+                $product->qty = $qty;
+                $cartItems[] = $product;
+            }
+        }
+
+        return $cartItems;
+    }
 }

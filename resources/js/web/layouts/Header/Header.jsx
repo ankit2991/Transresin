@@ -4,8 +4,10 @@ import { navLinks } from "./navlinks";
 import "./styles.module.scss";
 import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
 import { useSelector } from "react-redux";
+import useCart from "../../../hooks/useCart";
 
 const Header = () => {
+  const { cartCounter } = useCart();
   const { menus } = useSelector((state) => state?.home);
 
   return (
@@ -28,7 +30,12 @@ const Header = () => {
               <Link to="/" className="hover:text-primary-600">
                 <BiSearch size={30} />
               </Link>
-              <Link to="/cart" className="hover:text-primary-600">
+              <Link to="/cart" className="hover:text-primary-600 relative">
+                {cartCounter > 0 && (
+                  <span className="absolute end-[-5px] top-[-5px] bg-red-500 flex justify-center items-center rounded-full px-[5px] py-0 text-white text-[10px]">
+                    {cartCounter}
+                  </span>
+                )}
                 <BiShoppingBag size={30} />
               </Link>
               <Link

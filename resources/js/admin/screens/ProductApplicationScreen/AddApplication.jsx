@@ -5,7 +5,12 @@ import SeoMeta from "../../layouts/Modal/SeoMeta";
 import ApiExecute from "../../../api";
 import ImagePicker from "../../components/ImagePicker";
 
-const AddApplication = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
+const AddApplication = ({
+  isOpen,
+  onClose,
+  afterSubmit,
+  initialData = null,
+}) => {
   const [imagePreview, setImagePreview] = useState(initialData?.image || null);
   const [image, setImage] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -14,7 +19,7 @@ const AddApplication = ({ isOpen, onClose, afterSubmit, initialData = null }) =>
     // Fetch applications from the API
     const fetchApplications = async () => {
       try {
-        const apiResponse = await ApiExecute("application");
+        const apiResponse = await ApiExecute("application?type=dropdown");
 
         if (apiResponse.status) setApplications(apiResponse.data);
 
@@ -36,8 +41,6 @@ const AddApplication = ({ isOpen, onClose, afterSubmit, initialData = null }) =>
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    
-
     let url = initialData ? `application/${initialData.slug}` : "application";
 
     let apiResponse = await ApiExecute(url, {
@@ -92,7 +95,7 @@ const AddApplication = ({ isOpen, onClose, afterSubmit, initialData = null }) =>
                     id="parent_application_id"
                   >
                     <option value="">ROOT</option>
-                    {applications?.data?.map((application) => (
+                    {applications?.map((application) => (
                       <option key={application.id} value={application.id}>
                         {application.name}
                       </option>

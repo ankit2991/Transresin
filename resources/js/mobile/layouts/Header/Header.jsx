@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { navLinks } from "./navlinks";
 import "./styles.module.scss";
-import { BiMenu, BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
+import {
+  BiMenu,
+  BiSearch,
+  BiShoppingBag,
+  BiUser,
+  BiUserCircle,
+} from "react-icons/bi";
+import { MdOutlineShoppingCart, MdShoppingCart } from "react-icons/md";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,52 +18,54 @@ const Header = () => {
     <div className="overflow-x-hidden w-full">
       {/* Header for Mobile View */}
       <header className="relative bg-white shadow-md w-full">
-        <div className="flex items-center justify-between px-4 py-3 w-full">
+        <div className="flex items-end pt-10 w-full">
           {/* Left: Menu Icon */}
           <button
-            className="text-blue-900"
+            className="text-blue-900 self-center"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <BiMenu size={28} />
           </button>
 
           {/* Left: Logo aligned with Menu Icon */}
-          <div className="flex items-center gap-2">
+          <div>
             <Link to="/">
-              <img src="/images/logo.png" alt="Logo" />
+              <img src="/images/logo.png" alt="Logo" className="h-[40px]" />
             </Link>
           </div>
 
           {/* Top Right Section: Present Logo */}
-          <div className="absolute top-2 right-4">
+          <div className="absolute top-2 right-[-8px]">
             <img
               src="/images/present_logo.png"
               alt="Present Logo"
-              className="h-6"
+              className="h-10"
             />
+          </div>
+          {/* Right Section: Icons */}
+          <div className="flex justify-end items-center gap-2 ms-auto  text-primary-300">
+            <Link to="/login" className="flex gap-1">
+              <BiUserCircle size={24} /> Login
+            </Link>
+            <Link to="/cart">
+              <MdOutlineShoppingCart size={24} />
+            </Link>
           </div>
         </div>
 
-        {/* Right Section: Icons */}
-        <div className="flex justify-end items-center space-x-6 px-4 pb-3 text-blue-700">
-          <Link to="/" className="hover:text-blue-900">
-            <BiSearch size={24} />
-          </Link>
-          <Link to="/cart" className="hover:text-blue-900">
-            <BiShoppingBag size={24} />
-          </Link>
-          <Link to="/login" className="hover:text-blue-900">
-            <BiUser size={24} />
-          </Link>
-        </div>
-
         {/* Search Bar */}
-        <div className="bg-blue-100 px-4 py-2 w-full">
-          <input
-            type="text"
-            placeholder="Search for Products, Brands and More"
-            className="w-full rounded-lg py-2 px-4 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="bg-white py-2 w-full">
+          <div className="flex bg-blue-100 items-center rounded-lg text-blue-300">
+            <label htmlFor="search" className="mx-2">
+              <BiSearch size={20} />
+            </label>
+            <input
+              type="text"
+              placeholder="Search for Products, Brands and More"
+              className="w-full  py-2 bg-transparent focus:outline-none flex-1 placeholder:text-blue-400 "
+              id="search"
+            />
+          </div>
         </div>
       </header>
 

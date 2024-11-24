@@ -10,6 +10,7 @@ use App\Http\Controllers\HsnCodeController;
 use App\Http\Controllers\IndustryCategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +28,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [LoginController::class, 'doLogin']);
+Route::post('register', [UserController::class, 'store']);
 
-
+Route::get('/email/verify', function () {
+    return response()->json(['message' => 'Please verify your email address.'], 403);
+})->middleware('auth:sanctum')->name('verification.notice');
+Route::get('/email/verify/{user}/{hash}', [UserController::class, 'verify'])->middleware(['signed'])->name('verification.verify');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [LoginController::class, 'doLogout']);

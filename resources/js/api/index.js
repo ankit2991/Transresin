@@ -15,7 +15,7 @@ const ApiExecute = async (url, params = {}) => {
 
   let instance = axios.create({
     baseURL: "/api/",
-    timeout: 5 * 1000,
+    timeout: params?.timeout || 5 * 1000,
     headers,
   });
 

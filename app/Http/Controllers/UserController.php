@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\RegistrationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -41,7 +42,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
             'email' => 'required|unique:users,email',
             'mobile' => 'required|unique:users,mobile',
             'password' => 'required|string|min:5',
@@ -56,7 +57,7 @@ class UserController extends Controller
         $user->save();
 
         // Send verification email
-        $user->sendEmailVerificationNotification();
+        $user->notify(new RegistrationMail());
 
         return response()->json([
             'message' => 'Success! Registration successful! Please check your email to verify your account.'
@@ -120,5 +121,22 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Success! Your password has been changed.',
         ]);
+    }
+
+    public function verify(Request $request, User $user)
+    {
+        // Validate the signed URL
+        if (!$request->hasValidSignature()) {
+            abort(403, 'Invalid or expired verification link');
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return "<h1>Already Email verified!</h1><p>You can login to app.</p>";
+        }
+
+        // Mark the email as verified
+        $user->markEmailAsVerified();
+
+        return "<h1>Email verified!</h1><p>Now you can login to app.</p>";
     }
 }

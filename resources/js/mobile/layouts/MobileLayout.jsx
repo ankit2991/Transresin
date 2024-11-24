@@ -4,6 +4,7 @@ import ApiExecute from "../../api";
 import { useDispatch } from "react-redux";
 import { setMenus } from "../../redux/actions/homeActions";
 import Header from "./Header";
+import Footer from "./Footer";
 
 const MobileLayout = () => {
   const dispatch = useDispatch();
@@ -24,10 +25,11 @@ const MobileLayout = () => {
   }, []);
 
   return (
-    <>
+    <div className="mx-4">
       <Header />
       <Outlet />
-    </>
+      <Footer />
+    </div>
   );
 };
 

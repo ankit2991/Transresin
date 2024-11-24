@@ -2,9 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { navLinks } from "./navlinks";
 import "./styles.module.scss";
-import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
+import { BiSearch, BiShoppingBag, BiUser, BiUserCircle } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import useCart from "../../../hooks/useCart";
+import { MdShoppingCart } from "react-icons/md";
+import { FaAngleDown, FaAngleRight } from "react-icons/fa6";
 
 const Header = () => {
   const { cartCounter } = useCart();
@@ -26,35 +28,34 @@ const Header = () => {
             />
           </Link>
           <div className="lg:flex items-end">
-            <div className="ml-auto mb-5 flex gap-3 text-primary text-primary-300">
-              <Link to="/" className="hover:text-primary-600">
-                <BiSearch size={30} />
+            <div className="header-links">
+              <Link to="/login">
+                <BiUserCircle size={20} /> Sign In
               </Link>
-              <Link to="/cart" className="hover:text-primary-600 relative">
+              <Link to="/signup">Sign Up</Link>
+              <Link to="/cart">
+                <MdShoppingCart size={20} /> Cart
                 {cartCounter > 0 && (
-                  <span className="absolute end-[-5px] top-[-5px] bg-red-500 flex justify-center items-center rounded-full px-[5px] py-0 text-white text-[10px]">
-                    {cartCounter}
-                  </span>
+                  <span className="ms-1">({cartCounter})</span>
                 )}
-                <BiShoppingBag size={30} />
               </Link>
-              <Link
-                to="/login"
-                className="flex items-center hover:text-primary-600"
-              >
-                <BiUser size={30} /> Sign In
+              <Link to="/">
+                Search Products
+                <BiSearch size={20} />
               </Link>
             </div>
           </div>
         </div>
       </header>
 
-      <nav className="bg-blue-950 text-white sticky top-0 z-50">
+      <nav className="bg-primary-300 text-white sticky top-0 z-50">
         <div className="container mx-auto">
           <ul className="main-navbar">
             {menus?.map((link, index) => (
-              <li key={index}>
-                <Link to={link.slug}>{link.name}</Link>
+              <li key={index} className={link.slug}>
+                <Link to={link.slug}>
+                  {link.name} <FaAngleDown />
+                </Link>
 
                 {link?.data?.length ? (
                   <ul className="min-w-[150px] top-full start-0 w-max">
@@ -64,12 +65,15 @@ const Header = () => {
                           to={`/category/${category.id}`}
                           className="flex items-center"
                         >
-                          <img
-                            src={category.image}
-                            alt=""
-                            className="size-8 inline-block rounded-full"
-                          />
-                          <div className="ml-2">{category.name}</div>
+                          {category.image && (
+                            <img
+                              src={category.image}
+                              alt=""
+                              className="size-8 inline-block rounded-full"
+                            />
+                          )}
+                          <div className="ml-2 flex-grow">{category.name}</div>
+                          {category?.children?.length > 0 && <FaAngleRight />}
                         </Link>
                         {category?.children?.length ? (
                           <ul>

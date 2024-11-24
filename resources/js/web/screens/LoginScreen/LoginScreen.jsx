@@ -1,14 +1,47 @@
-import React from "react";
+import { Field, Form, Formik } from "formik";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ApiExecute from "../../../api";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { doLogin } from "../../../redux/actions/authActions"; // Replace with your actual action path
 
 const LoginScreen = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Perform login logic here
-    navigate("/contact");
+  const handleLogin = async (values, { setSubmitting }) => {
+    let response = await ApiExecute("login", {
+      method: "POST",
+      data: values,
+    });
+
+    const currentPath = window.location.pathname;
+
+    console.log("response: ", response.data.message);
+    if (response.status) {
+      dispatch(doLogin(response?.data));
+      if (currentPath === "/login") navigate("/");
+    } else {
+      console.warn("failed", response);
+
+      toast.error(response?.data?.message);
+    }
+
+    setSubmitting(false);
   };
+
+  // Validation Schema
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -24,24 +57,64 @@ const LoginScreen = () => {
           <h1 className="text-2xl font-bold mb-6 text-gray-800">
             Welcome Back
           </h1>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300"
-            />
-            <button
-              type="submit"
-              className="w-full py-2 bg-primary-300 text-white rounded hover:bg-primary-600 transition-colors"
-            >
-              Login
-            </button>
-          </form>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+              role: "user",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleLogin}
+          >
+            {({ errors, touched, isSubmitting }) => (
+              <Form className="space-y-4">
+                <div>
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    className={`web-input ${
+                      errors.email && touched.email ? "border-red-500" : ""
+                    }`}
+                  />
+                  {errors.email && touched.email && (
+                    <p className="text-red-500 text-sm">{errors.email}</p>
+                  )}
+                </div>
+                <div>
+                  <div className="relative">
+                    <Field
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                      className={`web-input ${
+                        errors.password && touched.password
+                          ? "border-red-500"
+                          : ""
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  {errors.password && touched.password && (
+                    <p className="text-red-500 text-sm">{errors.password}</p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 bg-primary-300 text-white rounded hover:bg-primary-600 transition-colors"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Login"}
+                </button>
+              </Form>
+            )}
+          </Formik>
           <p className="mt-4 text-sm text-gray-600">
             Haven't an account?{" "}
             <Link to="/signup" className="text-primary-300 hover:underline">

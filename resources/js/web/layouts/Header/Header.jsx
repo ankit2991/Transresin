@@ -2,15 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { navLinks } from "./navlinks";
 import "./styles.module.scss";
-import { BiSearch, BiShoppingBag, BiUser, BiUserCircle } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { BiSearch, BiUser, BiUserCircle } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
 import useCart from "../../../hooks/useCart";
 import { MdShoppingCart } from "react-icons/md";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa6";
+import { doLogout } from "../../../redux/actions/authActions";
 
 const Header = () => {
   const { cartCounter } = useCart();
   const { menus } = useSelector((state) => state?.home);
+
+  const { isLoggedIn, user } = useSelector((state) => state?.auth);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -29,10 +33,41 @@ const Header = () => {
           </Link>
           <div className="lg:flex items-end">
             <div className="header-links">
-              <Link to="/login">
-                <BiUserCircle size={20} /> Sign In
-              </Link>
-              <Link to="/signup">Sign Up</Link>
+              {isLoggedIn && user.role === "user" ? (
+                <Link
+                  to="/profile"
+                  className="relative [&>div]:hidden [&:hover>div]:block"
+                >
+                  <BiUser size={20} /> Your Account <FaAngleDown />
+                  <div className="absolute top-full right-0 z-[9999]">
+                    <div className="border bg-white p-3 rounded shadow-sm mt-2 text-start">
+                      <ul>
+                        <li>
+                          <Link>My Account</Link>
+                        </li>
+                        <li>
+                          <Link>Change Password</Link>
+                        </li>
+                        <li>
+                          <Link
+                            as={"button"}
+                            onClick={() => dispatch(doLogout())}
+                          >
+                            Logout
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <BiUserCircle size={20} /> Sign In
+                  </Link>
+                  <Link to="/signup">Sign Up</Link>
+                </>
+              )}
               <Link to="/cart">
                 <MdShoppingCart size={20} /> Cart
                 {cartCounter > 0 && (

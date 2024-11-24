@@ -37,8 +37,6 @@ const SignUpScreen = () => {
       toast.success(response.data.message);
       navigate("/login");
     } else {
-      console.warn(response.data);
-
       toast.error(response.data.message);
     }
 

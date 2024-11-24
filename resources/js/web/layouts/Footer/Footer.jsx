@@ -55,18 +55,75 @@ const Footer = () => {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="pt-16">
         <div className="container mx-auto">
-          <img src="/images/trans1.png" alt="" className="w-full" />
+          {/* <img src="/images/trans1.png" alt="" className="w-full mb-5" /> */}
+          <div className="bg-secondary p-14 px-32 rounded-lg">
+            <div className="flex justify-between items-center">
+              <div>
+                <img
+                  src="/images/five-star.png"
+                  alt=""
+                  className="max-w-full max-h-32"
+                />
+              </div>
+              <div>
+                <img
+                  src="/images/make-in-india.png"
+                  alt=""
+                  className="max-w-full max-h-24"
+                />
+              </div>
+              <div>
+                <img
+                  src="/images/secure-payment.png"
+                  alt=""
+                  className="max-w-full max-h-28"
+                />
+              </div>
+              <div>
+                <img
+                  src="/images/google-verified.png"
+                  alt=""
+                  className="max-w-full max-h-24"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-24">
+              <div>
+                <img src="/images/34year.png" alt="" className="max-h-24" />
+              </div>
+              <div>
+                <img
+                  src="/images/total_quality.png"
+                  alt=""
+                  className="max-h-24"
+                />
+              </div>
+              <div>
+                <img
+                  src="/images/global-shipping.png"
+                  alt=""
+                  className="max-h-24"
+                />
+              </div>
+              <div>
+                <img src="/images/fast-order.png" alt="" className="max-h-20" />
+              </div>
+              <div>
+                <img src="/images/ssl-secure.png" alt="" className="max-h-24" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="py-16">
         <div className="container mx-auto">
-          <div className="bg-secondary p-10 rounded-lg">
+          <div className="bg-secondary p-16 rounded-lg">
             <div className="text-center text-primary-300">
-              <h3 className="font-bold text-3xl">SUBSCRIBE TO OUR EMAIL</h3>
-              <p className="text-sm">
+              <h3 className="font-bold text-xl">SUBSCRIBE TO OUR EMAIL</h3>
+              <p className="text-sm font-bold">
                 BE THE FIRST TO KNOW ABOUT NEW PRODUCTS AND OFFERS
               </p>
             </div>
@@ -86,7 +143,7 @@ const Footer = () => {
       </section>
 
       <section className="pb-16 text-center">
-        <div className="flex gap-10 justify-center">
+        <div className="flex gap-5 justify-center [&>a>img]:size-8 [&>a>img]:object-contain">
           <a href="#" target="_blank">
             <img src="/images/fb.png" alt="" />
           </a>
@@ -100,9 +157,12 @@ const Footer = () => {
             <img src="/images/pin.png" alt="" />
           </a>
         </div>
+        <div className="text-center mt-5 text-primary-600">
+          like follow and subscribe
+        </div>
       </section>
       <footer className="bg-primary-300 text-white">
-        <div className="py-3 px-3 border-white border-b-[1px]">
+        <div className="py-3 px-3">
           <span className="size-6 bg-white rounded-full text-primary-300 inline-flex justify-center items-center text-lg font-bold">
             tr
           </span>

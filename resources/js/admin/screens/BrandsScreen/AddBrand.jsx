@@ -79,7 +79,7 @@ const AddBrand = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
                   <Field name="name" className="form-input" id="name" />
                 </div>
 
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label className="form-label" htmlFor="parent_brand_id">
                     Parent Category
                   </label>
@@ -96,7 +96,7 @@ const AddBrand = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
                       </option>
                     ))}
                   </Field>
-                </div>
+                </div> */}
 
                 <SeoMeta />
               </div>

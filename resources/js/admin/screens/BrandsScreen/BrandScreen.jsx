@@ -99,16 +99,13 @@ const BrandScreen = () => {
           limit={limit}
           setLimit={setLimit}
         >
-          <table className="min-w-full mt-4">
+          <table className="table">
             <thead>
               <tr>
-                <th className="border-b px-4 py-3 text-left">Sr. No.</th>
-                <th className="border-b px-4 py-3 text-left">Brand Name</th>
-                <th className="border-b px-4 py-3 text-left">
-                  Parent Brand Name
-                </th>
-                <th className="border-b px-4 py-3 text-left">Icon</th>
-                <th className="border-b px-4 py-3 text-left">Action</th>
+                <th>Sr. No.</th>
+                <th>Brand Name</th>
+                {/* <th>Icon</th> */}
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -118,21 +115,16 @@ const BrandScreen = () => {
                 );
                 return (
                   <tr key={index}>
-                    <td className="border-b px-4 py-3">
-                      {index + brands.from}.
-                    </td>
-                    <td className="border-b px-4 py-3">{brand.name}</td>
-                    <td className="border-b px-4 py-3">
-                      {brand?.parent?.name || "ROOT"}
-                    </td>
-                    <td className="border-b px-4 py-3">
-                      <img
+                    <td>{index + brands.from}.</td>
+                    <td>
+                      {/* <img
                         src={brand.image}
                         alt=""
-                        className="size-10 rounded border border-3 border-black object-contain"
-                      />
+                        className="size-10 rounded border border-3 border-black object-contain inline-block me-2"
+                      /> */}
+                      {brand.name}
                     </td>
-                    <td className="border-b px-4 py-3">
+                    <td>
                       <Actions
                         preventDelete={hasChildren}
                         editCallback={() => toggleModal(brand)}

@@ -98,23 +98,21 @@ const IndustryCategory = () => {
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">All Applications</h2>
+        <h2 className="text-2xl font-semibold mb-4">All Industry Categories</h2>
         <LaravelPagination
           items={industries}
           fetchData={fetchIndustryCategory}
           limit={limit}
           setLimit={setLimit}
         >
-          <table className="min-w-full mt-4">
+          <table className="table">
             <thead>
               <tr>
-                <th className="border-b px-4 py-3 text-left">Sr. No.</th>
-                <th className="border-b px-4 py-3 text-left">Industry Name</th>
-                <th className="border-b px-4 py-3 text-left">
-                  Parent Industry Name
-                </th>
-                <th className="border-b px-4 py-3 text-left">Icon</th>
-                <th className="border-b px-4 py-3 text-left">Action</th>
+                <th>Sr. No.</th>
+                <th>Industry Name</th>
+                {/* <th>Parent Industry Name</th> */}
+                {/* <th>Icon</th> */}
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -124,21 +122,17 @@ const IndustryCategory = () => {
                 );
                 return (
                   <tr key={index}>
-                    <td className="border-b px-4 py-3">
-                      {index + industries.from}.
-                    </td>
-                    <td className="border-b px-4 py-3">{industry.name}</td>
-                    <td className="border-b px-4 py-3">
-                      {industry?.parent?.name || "ROOT"}
-                    </td>
-                    <td className="border-b px-4 py-3">
+                    <td>{index + industries.from}.</td>
+                    <td>
                       <img
                         src={industry.image}
                         alt=""
-                        className="size-10 rounded border border-3 border-black object-contain"
+                        className="size-10 rounded border border-3 border-black object-contain me-2 inline"
                       />
+                      {industry.name}
                     </td>
-                    <td className="border-b px-4 py-3">
+                    {/* <td>{industry?.parent?.name || "ROOT"}</td> */}
+                    <td>
                       <Actions
                         preventDelete={hasChildren}
                         editCallback={() => toggleModal(industry)}

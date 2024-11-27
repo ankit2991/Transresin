@@ -16,21 +16,23 @@ return new class extends Migration
             $table->string("name");
             $table->string("slug")->unique();
             $table->string('image')->nullable();
-            $table->longText('description')->nullable();
+            $table->longText('description1')->nullable()->comment('upside');
+            $table->longText('description2')->nullable()->comment('before packaging');
+            $table->longText('description3')->nullable()->comment('after packaging');
             $table->longText('search_keywords')->nullable();
             // Foreign Keys
             $table->foreignId("category_id")->nullable()->constrained()->onDelete('SET NULL');
-            $table->foreignId("sub_category_id")->nullable()->constrained('categories')->onDelete('SET NULL');
+            // $table->foreignId("sub_category_id")->nullable()->constrained('categories')->onDelete('SET NULL');
             $table->foreignId("industry_category_id")->nullable()->constrained()->onDelete('SET NULL');
-            $table->foreignId("sub_industry_category_id")->nullable()->constrained('industry_categories')->onDelete('SET NULL');
+            // $table->foreignId("sub_industry_category_id")->nullable()->constrained('industry_categories')->onDelete('SET NULL');
             $table->foreignId("application_id")->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId("sub_application_id")->nullable()->constrained('applications')->onDelete('SET NULL');
             $table->foreignId("brand_id")->nullable()->constrained()->onDelete('SET NULL');
             $table->foreignId("hsn_code_id")->nullable()->constrained()->onDelete('SET NULL');
             // End Foreign Keys
-            $table->double("regular_price");
-            $table->double("discount");
-            $table->double("trade_price");
+            // $table->double("regular_price");
+            // $table->double("discount");
+            // $table->double("trade_price");
             $table->string('seo_title')->nullable();
             $table->text('seo_keywords')->nullable();
             $table->text('seo_description')->nullable();

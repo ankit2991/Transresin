@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
 import MobileLayout from "../mobile/layouts/MobileLayout";
 import ProductScreen from "../web/screens/ProductScreen/ProductScreen";
+import MaterialScreen from "../admin/screens/MaterialScreen/MaterialScreen";
+import FeatureScreen from "../admin/screens/FeatureScreen/FeatureScreen";
 
 const WebLayout = lazy(() => import("../web/layouts/WebLayout"));
 const HomeScreen = lazy(() => import("../web/screens/HomeScreen"));
@@ -66,10 +68,12 @@ const AppRoutes = () => {
             <Route
               path="industry-category"
               element={<IndustryCategoryPage />}
-            ></Route>
-            <Route path="brands" element={<BrandsPage />}></Route>
-            <Route path="hsn-code" element={<HsnCodeScreen />}></Route>
-            <Route path="products" element={<ProductsPage />}></Route>
+            />
+            <Route path="brands" element={<BrandsPage />} />
+            <Route path="feature" element={<FeatureScreen />} />
+            <Route path="material" element={<MaterialScreen />} />
+            <Route path="hsn-code" element={<HsnCodeScreen />} />
+            <Route path="products" element={<ProductsPage />} />
             <Route path="add-product" element={<AddProductPage />} />
           </Route>
           {isMobile ? (

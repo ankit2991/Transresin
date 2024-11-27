@@ -61,7 +61,7 @@ const Dropdown = ({ items }) => {
         <button
           onClick={toggleDropdown}
           onKeyDown={handleKeyDown}
-          className="text-primary-300 border-2 border-primary-300 font-bold bg-white px-4 py-2 rounded-lg flex items-center"
+          className="text-primary-300 border-2 border-primary-300 font-bold bg-white px-1 py-1 lg:px-4 lg:py-2 rounded-lg flex items-center text-xs lg:text-base "
         >
           {items[selectedIndex]}
           <FaAngleDown className="ms-auto" />
@@ -70,7 +70,7 @@ const Dropdown = ({ items }) => {
 
       {isOpen && (
         <ul
-          className="absolute bg-white border border-primary-300 rounded-lg mt-2 shadow-lg w-48 z-10 overflow-hidden"
+          className="absolute bg-white border border-primary-300 rounded-lg mt-2 right-0 shadow-lg w-48 z-10 overflow-hidden"
           role="listbox"
         >
           {items.map((item, index) => (
@@ -83,7 +83,7 @@ const Dropdown = ({ items }) => {
                 setSelectedIndex(index);
                 setIsOpen(false);
               }}
-              className={`px-4 py-2 cursor-pointer ${
+              className={`lg:px-4 lg:py-2 px-1 py-1 lg:text-base text-xs cursor-pointer ${
                 selectedIndex === index
                   ? "bg-primary-300 text-white"
                   : "hover:bg-gray-200"

@@ -11,7 +11,7 @@ const AdminLayout = () => {
       </aside>
       <section className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto bg-blue-50">
           <Outlet />
         </main>
         <footer></footer>

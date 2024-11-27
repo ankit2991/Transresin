@@ -97,18 +97,14 @@ const ProductCategory = () => {
             limit={limit}
             setLimit={setLimit}
           >
-            <table className="min-w-full mt-4">
+            <table className="table">
               <thead>
                 <tr>
-                  <th className="border-b px-4 py-3 text-left">Sr. No.</th>
-                  <th className="border-b px-4 py-3 text-left">
-                    Category Name
-                  </th>
-                  <th className="border-b px-4 py-3 text-left">
-                    Parent Category Name
-                  </th>
-                  <th className="border-b px-4 py-3 text-left">Icon</th>
-                  <th className="border-b px-4 py-3 text-left">Action</th>
+                  <th>Sr. No.</th>
+                  <th>Category Name</th>
+                  <th>Parent Category Name</th>
+                  <th>Icon</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,21 +114,17 @@ const ProductCategory = () => {
                   );
                   return (
                     <tr key={index}>
-                      <td className="border-b px-4 py-3">
-                        {index + categories.from}.
-                      </td>
-                      <td className="border-b px-4 py-3">{category.name}</td>
-                      <td className="border-b px-4 py-3">
-                        {category?.parent?.name || "ROOT"}
-                      </td>
-                      <td className="border-b px-4 py-3">
+                      <td>{index + categories.from}.</td>
+                      <td>{category.name}</td>
+                      <td>{category?.parent?.name || "ROOT"}</td>
+                      <td>
                         <img
                           src={category.image}
                           alt=""
                           className="size-10 rounded border border-3 border-black object-contain"
                         />
                       </td>
-                      <td className="border-b px-4 py-3">
+                      <td>
                         <Actions
                           preventDelete={hasChildren}
                           editCallback={() => toggleModal(category)}

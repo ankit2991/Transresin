@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsCartPlus, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import useCart from "../../hooks/useCart";
 
 const ProductGrid = ({ product }) => {
   const { saveToCart } = useCart();
+
+  const [selectedPkg, setSelectedPkg] = useState(product.packages[0]);
 
   return (
     <div key={product.id} className="bg-yellow-100 p-3 rounded-lg">
@@ -33,10 +35,22 @@ const ProductGrid = ({ product }) => {
             {product?.reviews} Reviews
           </div>
         </div>
+        <div className="mt-4">
+          <select
+            className="form-input"
+            onChange={(e) => setSelectedPkg(JSON.parse(e.target.value))}
+          >
+            {product.packages?.map((pkg) => (
+              <option value={JSON.stringify(pkg)} key={pkg.id}>
+                {pkg.name} - {pkg.composition}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="flex items-end gap-3 py-3">
-          <del className="text-gray-400">₹.{product.regular_price}</del>
+          <del className="text-gray-400">₹.{selectedPkg.regular_price}</del>
           <big className="font-semibold text-primary-300 text-3xl">
-            ₹.{product.trade_price}
+            ₹.{selectedPkg.trade_price}
           </big>
         </div>
         <div className="d-grid">

@@ -87,4 +87,19 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function packages()
+    {
+        return $this->hasMany(ProductPackage::class);
+    }
+
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class, 'product_features');
+    }
+
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class, 'product_materials');
+    }
 }

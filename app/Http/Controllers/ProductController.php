@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductFeature;
 use App\Models\ProductImage;
+use App\Models\ProductPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +20,7 @@ class ProductController extends Controller
         $query = Product::query();
 
         // Apply pagination limit if provided, otherwise default to 10
-        $products = $query->with(['category', 'industryCategory', 'application', 'brand', 'hsnCode'])->latest()->paginate($request->get('limit', 10));
+        $products = $query->with(['category', 'industryCategory', 'application', 'brand', 'hsnCode', 'packages'])->latest()->paginate($request->get('limit', 10));
 
         return response()->json($products);
     }
@@ -31,7 +33,7 @@ class ProductController extends Controller
         // Validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:products|max:255',
-            'description' => 'nullable|string',
+            'description1' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:categories,id',
             'industry_category_id' => 'nullable|exists:industry_categories,id',
@@ -61,19 +63,21 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name, '-'),
-            'description' => $request->description,
+            'description1' => $request->description1,
+            'description2' => $request->description2,
+            'description3' => $request->description3,
             'search_keywords' => $request->search_keywords,
             'category_id' => $request->category_id,
-            'sub_category_id' => $request->sub_category_id,
+            // 'sub_category_id' => $request->sub_category_id,
             'industry_category_id' => $request->industry_category_id,
-            'sub_industry_category_id' => $request->sub_industry_category_id,
+            // 'sub_industry_category_id' => $request->sub_industry_category_id,
             'application_id' => $request->application_id,
             'sub_application_id' => $request->sub_application_id,
             'brand_id' => $request->brand_id,
             'hsn_code_id' => $request->hsn_code_id,
-            'regular_price' => $request->regular_price,
-            'discount' => $request->discount,
-            'trade_price' => $request->trade_price,
+            // 'regular_price' => $request->regular_price,
+            // 'discount' => $request->discount,
+            // 'trade_price' => $request->trade_price,
             'seo_title' => $request->seo_title,
             'seo_keywords' => $request->seo_keywords,
             'seo_description' => $request->seo_description,
@@ -85,6 +89,27 @@ class ProductController extends Controller
         }
 
         $product->save();
+
+        $product->features()->sync($request->features);
+        $product->materials()->sync($request->materials);
+
+        if (!empty($request->packagings)) {
+            foreach ($request->packagings as $package) {
+                $productPackage = new ProductPackage();
+                $productPackage->product_id = $product->id;
+                $productPackage->name = $package['name'];
+                $productPackage->composition = $package['composition'];
+                $productPackage->regular_price = $package['regular_price'];
+                $productPackage->discount = $package['discount'];
+                $productPackage->trade_price = $package['trade_price'];
+
+                if (!empty($package['image'])) {
+                    $productPackage->image = dataUriToImage($package['image'], "products/{$product->id}/packages");
+                }
+
+                $productPackage->save();
+            }
+        }
 
         // Handle additional product images
         if (!empty($request->images)) {
@@ -124,8 +149,18 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($productSlug)
     {
+        // dd($productSlug);
+        $product = Product::with([
+            'productImages',
+            'packages',
+            'features',
+            'materials'
+        ])->where('slug', $productSlug)->firstOrFail();
+
+        // dd($product);
+
         return response()->json($product);
     }
 

@@ -209,7 +209,7 @@ body {
 
   & {
     thead th {
-      @apply border px-4 py-3 text-left;
+      @apply border px-4 py-3 text-left font-bold bg-blue-500 text-white;
     }
     tbody td {
       @apply border px-4 py-1;
@@ -236,4 +236,24 @@ body {
  */
 .web-input {
   @apply w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-300;
+}
+
+@media screen and (max-width: 800px) {
+  .custom-pagination {
+    @apply -bottom-5 absolute left-0 w-full flex justify-center gap-2;
+
+    .swiper-pagination-bullet {
+      opacity: 1 !important;
+      @apply bg-primary-300 opacity-100;
+    }
+
+    .swiper-pagination-bullet-active {
+      @apply bg-white border border-primary-300;
+    }
+  }
+}
+
+.editor-container {
+  position: relative; /* Ensure proper stacking */
+  margin-bottom: 16px !important; /* Add some spacing */
 }

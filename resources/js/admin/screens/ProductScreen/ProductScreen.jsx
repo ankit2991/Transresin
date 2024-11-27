@@ -92,16 +92,14 @@ const ProductScreen = () => {
           limit={limit}
           setLimit={setLimit}
         >
-          <table className="min-w-full mt-4">
+          <table className="table">
             <thead>
               <tr>
-                <th className="border-b px-4 py-3 text-left">S.No.</th>
-                <th className="border-b px-4 py-3 text-left" colSpan={2}>
-                  Item Details
-                </th>
-                <th className="border-b px-4 py-3 text-left">Attributes</th>
-                <th className="border-b px-4 py-3 text-left">Price</th>
-                <th className="border-b px-4 py-3 text-left">Action</th>
+                <th>S.No.</th>
+                <th colSpan={2}>Item Details</th>
+                <th>Attributes</th>
+                <th>Price</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -111,17 +109,15 @@ const ProductScreen = () => {
                 );
                 return (
                   <tr key={index}>
-                    <td className="border-b px-4 py-3">
-                      {index + products.from}.
-                    </td>
-                    <td className="border-b px-4 py-3">
+                    <td>{index + products.from}.</td>
+                    <td>
                       <img
                         src={product.image}
                         alt=""
                         className="size-24 rounded border border-3 border-black object-contain"
                       />
                     </td>
-                    <td className="border-b px-4 py-3">
+                    <td>
                       <div>
                         <div className="font-bold text-lg capitalize whitespace-nowrap">
                           {product.name}
@@ -155,7 +151,7 @@ const ProductScreen = () => {
                         <strong>Brand: </strong> {product.brand?.name}
                       </div>
                     </td>
-                    <td className="border-b px-4 py-3">
+                    <td>
                       <div>
                         <div className="text-sm">
                           <div>
@@ -170,7 +166,7 @@ const ProductScreen = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="border-b px-4 py-3">
+                    <td>
                       <Actions
                         preventDelete={hasChildren}
                         editCallback={() => toggleModal(product)}

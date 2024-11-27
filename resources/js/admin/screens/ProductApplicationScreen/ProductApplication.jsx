@@ -101,16 +101,14 @@ const ProductApplication = () => {
           limit={limit}
           setLimit={setLimit}
         >
-          <table className="min-w-full mt-4">
+          <table className="table">
             <thead>
               <tr>
-                <th className="border-b px-4 py-3 text-left">Sr. No.</th>
-                <th className="border-b px-4 py-3 text-left">Application Name</th>
-                <th className="border-b px-4 py-3 text-left">
-                  Parent Application Name
-                </th>
-                <th className="border-b px-4 py-3 text-left">Icon</th>
-                <th className="border-b px-4 py-3 text-left">Action</th>
+                <th>Sr. No.</th>
+                <th>Application Name</th>
+                <th>Parent Application Name</th>
+                <th>Icon</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -120,25 +118,23 @@ const ProductApplication = () => {
                 );
                 return (
                   <tr key={index}>
-                    <td className="border-b px-4 py-3">
-                      {index + applications.from}.
-                    </td>
-                    <td className="border-b px-4 py-3">{application.name}</td>
-                    <td className="border-b px-4 py-3">
-                      {application?.parent?.name || "ROOT"}
-                    </td>
-                    <td className="border-b px-4 py-3">
+                    <td>{index + applications.from}.</td>
+                    <td>{application.name}</td>
+                    <td>{application?.parent?.name || "ROOT"}</td>
+                    <td>
                       <img
                         src={application.image}
                         alt=""
                         className="size-10 rounded border border-3 border-black object-contain"
                       />
                     </td>
-                    <td className="border-b px-4 py-3">
+                    <td>
                       <Actions
                         preventDelete={hasChildren}
                         editCallback={() => toggleModal(application)}
-                        deleteCallback={() => deleteApplication(application.slug)}
+                        deleteCallback={() =>
+                          deleteApplication(application.slug)
+                        }
                       />
                     </td>
                   </tr>

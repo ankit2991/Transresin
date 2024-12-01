@@ -1,4 +1,4 @@
-import { BiGridAlt, BiSolidDashboard } from "react-icons/bi";
+import { BiCarousel, BiGridAlt, BiSolidDashboard } from "react-icons/bi";
 import {
   FaClipboardList,
   FaComment,
@@ -64,6 +64,11 @@ export const links = [
     label: "Order Lists",
     target: "order",
     icon: <FaClipboardList />,
+  },
+  {
+    label: "Sliders",
+    target: "slider",
+    icon: <BiCarousel />,
   },
   {
     label: "Users",

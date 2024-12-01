@@ -22,6 +22,7 @@ import OrderDetail from "../web/screens/account/OrderDetail";
 import ContactEnquiryScreen from "../admin/screens/ContactEnquiry/ContactEnquiryScreen";
 import DealerEnquiryScreen from "../admin/screens/DealerEnquiry/DealerEnquiryScreen";
 import NewsletterEmailScreen from "../admin/screens/NewsletterEmailScreen";
+import Slider from "../admin/screens/SliderScreen/SliderScreen";
 
 const UserScreen = lazy(() => import("../admin/screens/UserScreen/UserScreen"));
 const PageScreen = lazy(() => import("../admin/screens/PageScreen/PageScreen"));
@@ -110,6 +111,7 @@ const AppRoutes = () => {
             <Route path="video" element={<Video />} />
             <Route path="testimonial" element={<TestimonialScreen />} />
             <Route path="products" element={<ProductsPage />} />
+            <Route path="slider" element={<Slider />} />
             <Route path="add-product" element={<AddProductPage />} />
           </Route>
 

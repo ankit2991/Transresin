@@ -37,7 +37,7 @@
         "react-select": "^5.8.3",
         "react-toastify": "^10.0.6",
         "sweetalert": "^2.1.2",
-        "swiper": "^11.1.14",
+        "swiper": "^11.1.15",
         "yup": "^1.4.0"
     }
 }

@@ -49,7 +49,7 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
       <Formik
         initialValues={{
           name: initialData?.name || "",
-          parent_category_id: initialData?.parent_category_id || "",
+          // parent_category_id: initialData?.parent_category_id || "",
           image: null,
           seo_title: initialData?.seo_title || "",
           seo_keywords: initialData?.seo_keywords || "",
@@ -69,7 +69,7 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
                   <Field name="name" className="form-input" id="name" />
                 </div>
 
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label className="form-label" htmlFor="parent_category_id">
                     Parent Category
                   </label>
@@ -86,7 +86,7 @@ const AddCategory = ({ isOpen, onClose, afterSubmit, initialData = null }) => {
                       </option>
                     ))}
                   </Field>
-                </div>
+                </div> */}
 
                 <SeoMeta />
               </div>

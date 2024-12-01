@@ -18,7 +18,7 @@ const HomeSale = ({ products }) => {
 
         <div className="grid lg:grid-cols-5 grid-cols-2 gap-3 mb-5">
           {products?.map((product) => (
-            <ProductGrid product={product} />
+            <ProductGrid product={product} key={product.id} />
           ))}
         </div>
 

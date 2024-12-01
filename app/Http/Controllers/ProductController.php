@@ -45,8 +45,13 @@ class ProductController extends Controller
             });
         }
 
-        // Apply pagination limit if provided, otherwise default to 10
-        $products = $query->with(['category', 'industryCategory', 'application', 'brand', 'hsnCode', 'packages'])->latest()->paginate($request->get('limit', 10));
+        if ($request?->type == "dropdown") {
+            $products = $query->orderBy('name')->select('id', 'name')->get();
+        } else {
+            // Apply pagination limit if provided, otherwise default to 10
+            $products = $query->with(['category', 'industryCategory', 'application', 'brand', 'hsnCode', 'packages'])->latest()->paginate($request->get('limit', 10));
+        }
+
 
         return response()->json($products);
     }

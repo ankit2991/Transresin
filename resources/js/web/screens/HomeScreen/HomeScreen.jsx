@@ -14,16 +14,25 @@ import { createYT_Thumb } from "../../../utils/youtube";
 import { FaYoutube } from "react-icons/fa";
 // import { useSelector } from "react-redux";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/autoplay";
+
 const HomeScreen = () => {
   // const { menus } = useSelector((state) => state?.home);
   const [data, setData] = useState({});
+  const [sliders, setSliders] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
       let apiResponse = await ApiExecute("home");
+      let sliderResponse = await ApiExecute("web/slider?type=dropdown");
       setLoading(false);
       if (apiResponse.status) setData(apiResponse.data);
+      if (sliderResponse.status) setSliders(sliderResponse.data);
     }
     fetchData();
   }, []);
@@ -32,8 +41,8 @@ const HomeScreen = () => {
 
   return (
     <div className="bg-white">
-      <section className="py-5 bg-gray-200 text-primary-300 border-2 border-primary-300">
-        <div className="container mx-auto">
+      <section className=" border-2 border-primary-300">
+        {/* <div className="container mx-auto">
           <div className="flex items-center">
             <div className="flex-1">
               <div className="hidden md:block">
@@ -58,7 +67,20 @@ const HomeScreen = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
+        <Swiper modules={[Navigation, Autoplay]} navigation autoplay loop>
+          {sliders?.map((slide) => (
+            <SwiperSlide key={slide.id}>
+              <Link to={`/product/${slide?.product?.slug}`} className="block">
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full aspect-[8/3]"
+                />
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </section>
 
       <Suspense fallback={<div>Loading...</div>}>

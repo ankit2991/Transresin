@@ -17,6 +17,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
@@ -69,6 +70,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'user' => UserController::class,
         'video' => VideoController::class,
         'testimonial' => TestimonialController::class,
+        'slider' => SliderController::class,
     ]);
 
 
@@ -82,6 +84,7 @@ Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/web/product/{product}', [ProductController::class, 'show']);
 Route::get('/web/page/{page}', [PageController::class, 'show']);
+Route::get('/web/slider', [SliderController::class, 'index']);
 Route::get('/application', [ApplicationController::class, 'index']);
 Route::get('/industry', [IndustryCategoryController::class, 'index']);
 Route::get('/brand', [BrandsController::class, 'index']);

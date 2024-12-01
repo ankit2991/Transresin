@@ -5,6 +5,7 @@ use App\Http\Controllers\BrandsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactEnquiryController;
 use App\Http\Controllers\DealerEnquiryController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\HomeController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\HsnCodeController;
 use App\Http\Controllers\IndustryCategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
@@ -49,6 +51,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/order', [OrderController::class, 'store']);
 
     Route::get('/dealer-enquiry', [DealerEnquiryController::class, 'index']);
+    Route::get('/newsletter', [NewsletterController::class, 'index']);
+    Route::post('/newsletter/email', [NewsletterController::class, 'sendEmails']);
+    Route::get('/contact-enquiry', [ContactEnquiryController::class, 'index']);
     Route::delete('/dealer-enquiry/:dealerEnquiry', [DealerEnquiryController::class, 'destroy']);
 
     Route::apiResources([
@@ -85,3 +90,5 @@ Route::get('/my-orders', [OrderController::class, 'index']);
 Route::get('/order/{order}', [OrderController::class, 'show']);
 Route::post('/order', [OrderController::class, 'store']);
 Route::post('/dealer-enquiry', [DealerEnquiryController::class, 'store']);
+Route::post('/contact-enquiry', [ContactEnquiryController::class, 'store']);
+Route::post('/newsletter', [NewsletterController::class, 'store'])->name('newsletter.store');

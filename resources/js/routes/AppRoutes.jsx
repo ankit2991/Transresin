@@ -19,6 +19,9 @@ import MyOrders from "../web/screens/account/MyOrders";
 import Wishlist from "../web/screens/account/Wishlist";
 import ChangePassword from "../web/screens/account/ChangePassword";
 import OrderDetail from "../web/screens/account/OrderDetail";
+import ContactEnquiryScreen from "../admin/screens/ContactEnquiry/ContactEnquiryScreen";
+import DealerEnquiryScreen from "../admin/screens/DealerEnquiry/DealerEnquiryScreen";
+import NewsletterEmailScreen from "../admin/screens/NewsletterEmailScreen";
 
 const UserScreen = lazy(() => import("../admin/screens/UserScreen/UserScreen"));
 const PageScreen = lazy(() => import("../admin/screens/PageScreen/PageScreen"));
@@ -97,7 +100,10 @@ const AppRoutes = () => {
             <Route path="brands" element={<BrandsPage />} />
             <Route path="page" element={<PageScreen />} />
             <Route path="user" element={<UserScreen />} />
+            <Route path="contact-enquiry" element={<ContactEnquiryScreen />} />
+            <Route path="dealer-enquiry" element={<DealerEnquiryScreen />} />
             <Route path="order" element={<OrderScreen />} />
+            <Route path="newsletter" element={<NewsletterEmailScreen />} />
             <Route path="feature" element={<FeatureScreen />} />
             <Route path="material" element={<MaterialScreen />} />
             <Route path="hsn-code" element={<HsnCodeScreen />} />

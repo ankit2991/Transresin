@@ -1,14 +1,16 @@
-import { BiGrid, BiGridAlt, BiSolidDashboard } from "react-icons/bi";
-import { BsApp } from "react-icons/bs";
+import { BiGridAlt, BiSolidDashboard } from "react-icons/bi";
 import {
   FaClipboardList,
   FaComment,
-  FaFile,
+  FaEnvelope,
   FaFileAlt,
+  FaHandshake,
   FaHeart,
+  FaPhoneAlt,
   FaUsers,
   FaVideo,
 } from "react-icons/fa";
+import { FaEnvelopeCircleCheck } from "react-icons/fa6";
 
 export const ADMIN_URL = "/transresin-panel/";
 
@@ -82,5 +84,20 @@ export const links = [
     label: "Testimonial",
     target: "testimonial",
     icon: <FaComment />,
+  },
+  {
+    label: "Contact Enquiry",
+    target: "contact-enquiry",
+    icon: <FaPhoneAlt />,
+  },
+  {
+    label: "Dealer Enquiry",
+    target: "dealer-enquiry",
+    icon: <FaHandshake />,
+  },
+  {
+    label: "Newsletter",
+    target: "newsletter",
+    icon: <FaEnvelopeCircleCheck />,
   },
 ];

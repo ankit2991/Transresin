@@ -7,8 +7,19 @@ import { GiIndiaGate } from "react-icons/gi";
 import HomeHeading from "../../components/HomeHeading";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import ApiExecute from "../../../api";
+import { toast } from "react-toastify";
 
 const Footer = () => {
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+  });
+
   return (
     <>
       <section>
@@ -129,16 +140,52 @@ const Footer = () => {
               </p>
             </div>
 
-            <div className="flex items-center border-primary-300 border-solid border-2 rounded-3xl max-w-md mx-auto my-5">
-              <input
-                type="email"
-                className="grow bg-transparent px-5 py-3 text-primary-300 outline-none placeholder:text-primary-300"
-                placeholder="Email"
-              />
-              <span className="px-3 text-3xl text-primary-300">
-                <FaLongArrowAltRight />
-              </span>
-            </div>
+            <Formik
+              initialValues={{ email: "" }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { resetForm, setSubmitting }) => {
+                let apiResponse = await ApiExecute("newsletter", {
+                  method: "POST",
+                  data: values,
+                });
+
+                setSubmitting(false);
+                resetForm(); // Reset the form after submission
+
+                if (apiResponse.status) {
+                  toast.success(apiResponse?.data?.message);
+                } else {
+                  toast.error(apiResponse.data?.message);
+                }
+              }}
+            >
+              {({ isValid, isSubmitting }) => (
+                <Form className="flex items-center border-primary-300 border-solid border-2 rounded-3xl max-w-md mx-auto my-5">
+                  <div className="flex-grow">
+                    {/* Email Field */}
+                    <Field
+                      type="email"
+                      name="email"
+                      className="grow w-full bg-transparent px-5 py-3 text-primary-300 outline-none placeholder:text-primary-300"
+                      placeholder="Email"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-red-500 text-sm px-5"
+                    />
+                  </div>
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    className="px-3 text-3xl text-primary-300"
+                    disabled={!isValid || isSubmitting}
+                  >
+                    <FaLongArrowAltRight />
+                  </button>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </section>

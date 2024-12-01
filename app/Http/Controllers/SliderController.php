@@ -14,10 +14,16 @@ class SliderController extends Controller
      */
     public function index(Request $request)
     {
+        $query = Slider::with('product');
+
+        if (!empty($request?->search)) {
+            $query->where("title", "LIKE", "%" . $request->search . "%");
+        }
+
         if ($request?->type == "dropdown") {
-            $sliders = Slider::with('product')->latest()->get();
+            $sliders = $query->latest()->get();
         } else
-            $sliders = Slider::with('product')->latest()->paginate(request()->limit ?: 10);
+            $sliders = $query->latest()->paginate(request()->limit ?: 10);
 
         return response()->json($sliders);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Razorpay\Api\Api;
 
 class OrderController extends Controller
 {
@@ -50,14 +51,35 @@ class OrderController extends Controller
             'total_amount' => 'required|numeric',
         ]);
 
-        $validatedData['user_id'] = $request?->user()?->id;
-        $validatedData['order_token'] = uniqid("TRANS_");
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
 
-        $order = Order::create($validatedData);
 
-        $order->products()->sync($request->cart_items);
+        try {
+            // Create the order with Razorpay
+            $orderData = [
+                'receipt'         => 'txn_' . time(),
+                'amount'          => $request->total_amount * 100, // Amount in paise
+                'currency'        => 'INR',
+                'payment_capture' => 1, // Auto capture the payment
+            ];
 
-        return response()->json($order, 201);
+            // Create the order
+            $order = $api->order->create($orderData);
+
+            $validatedData['user_id'] = $request?->user()?->id;
+            $validatedData['order_token'] = $order->id;
+
+            $order = Order::create($validatedData);
+
+            $order->products()->sync($request->cart_items);
+
+            return response()->json($order, 201);
+        } catch (\Exception $e) {
+            // Catch any exceptions and return the error message
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -73,9 +95,18 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request,  $orderToken)
     {
-        //
+        $order = Order::where('order_token', $orderToken)->firstOrFail();
+
+        $order->payment_txn_id = $request->txn_id;
+        $order->is_paid = 'Y';
+        $order->save();
+
+        return response()->json([
+            'message' => 'Order placed.',
+            'order' => $order
+        ]);
     }
 
     /**

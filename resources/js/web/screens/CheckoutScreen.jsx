@@ -5,10 +5,14 @@ import useCart from "../../hooks/useCart";
 import ApiExecute from "../../api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useRazorpay } from "react-razorpay";
+import { useSelector } from "react-redux";
 
 const CheckoutScreen = () => {
   const [sameAsBilling, setSameAsBilling] = useState(false);
   const { cartProducts, deleteAllCart } = useCart();
+  const { error, isLoading, Razorpay } = useRazorpay();
+  const { user, isLoggedIn } = useSelector((state) => state?.auth);
 
   const navigate = useNavigate();
 
@@ -40,20 +44,20 @@ const CheckoutScreen = () => {
 
   const initialValues = {
     billing: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
+      firstName: user?.first_name || "",
+      lastName: user?.last_name || "",
+      email: user?.email || "",
+      phone: user?.mobile || "",
       address: "",
       city: "",
       state: "",
       zip: "",
     },
     shipping: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
+      firstName: user?.first_name || "",
+      lastName: user?.last_name || "",
+      email: user?.email || "",
+      phone: user?.mobile || "",
       address: "",
       city: "",
       state: "",
@@ -98,14 +102,52 @@ const CheckoutScreen = () => {
       };
     }
 
-    let apiResponse = await ApiExecute("order", {
+    let apiResponse = await ApiExecute(isLoggedIn ? "order" : "web/order", {
       method: "POST",
       data,
     });
 
     if (apiResponse.status) {
       deleteAllCart();
-      navigate(`/order-confirmation/${apiResponse.data.order_token}`);
+
+      const options = {
+        key: "rzp_test_NOV8qZJz1V40c7", // Replace with your Razorpay key
+        amount: finalTotal * 100,
+        currency: "INR",
+        name: "Transresin",
+        description: "",
+        order_id: apiResponse?.data?.order_token,
+        handler: async (response) => {
+          // Send the payment response to the server
+          let paymentData = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          await ApiExecute(`order/${apiResponse?.data?.order_token}`, {
+            method: "POST",
+            data: {
+              _method: "PUT",
+              txn_id: paymentData.razorpay_payment_id,
+            },
+          });
+
+          navigate(`/order-confirmation/${apiResponse.data.order_token}`);
+        },
+        prefill: {
+          name: values.billing.firstName,
+          email: values.billing.email,
+          contact: values.billing.phone,
+        },
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+      //   navigate(`/order-confirmation/${apiResponse.data.order_token}`);
     } else {
       toast.error("Ooops! Somenthing Went wrong, please try again.");
     }
@@ -119,6 +161,10 @@ const CheckoutScreen = () => {
           <h1 className="text-4xl font-bold mb-4">Checkout</h1>
         </div>
       </section>
+
+      {isLoading && <p>Loading Razorpay...</p>}
+      {error && <p>Error loading Razorpay: {error}</p>}
+
       <div className="container mx-auto py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Section: Address Forms */}
@@ -126,6 +172,7 @@ const CheckoutScreen = () => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            enableReinitialize
           >
             {({ values, setFieldValue, isSubmitting }) => (
               <Form className="space-y-6 lg:col-span-2">

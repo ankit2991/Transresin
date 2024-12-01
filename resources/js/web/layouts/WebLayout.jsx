@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import ApiExecute from "../../api";
@@ -8,6 +8,12 @@ import { setMenus } from "../../redux/actions/homeActions";
 
 const WebLayout = () => {
   const dispatch = useDispatch();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top-left corner
+  }, [location]);
 
   useEffect(() => {
     const fetchCategories = async () => {

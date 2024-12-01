@@ -7,6 +7,10 @@ use App\Models\Application;
 use App\Models\Brands;
 use App\Models\Category;
 use App\Models\IndustryCategory;
+use App\Models\Product;
+use App\Models\ProductPackage;
+use App\Models\Testimonial;
+use App\Models\Video;
 
 class HomeController extends Controller
 {
@@ -23,26 +27,39 @@ class HomeController extends Controller
         $resArr = [
             [
                 "name" => "Product By Application",
-                "slug" => "product-application",
+                "slug" => "application",
                 "data" => $applications
             ],
             [
                 "name" => "Product Category",
-                "slug" => "product-category",
+                "slug" => "category",
                 "data" => $categories
             ],
             [
-                "name" => "Industy Category",
-                "slug" => "industy-category",
+                "name" => "Industry Category",
+                "slug" => "industry-category",
                 "data" => $industyCategories
             ],
             [
                 "name" => "Brands",
-                "slug" => "brands",
+                "slug" => "brand",
                 "data" => $brands
             ],
         ];
 
+        return response()->json($resArr);
+    }
+
+    public function front()
+    {
+        $resArr = [
+            'applications' => Application::orderBy('name')->whereNull('parent_application_id')->skip(0)->take(12)->get(),
+            'products' => Product::with('packages')->whereHas('packages', function ($q) {
+                $q->where('discount', '>', 0);
+            })->skip(0)->take(5)->get(),
+            'videos' => Video::latest()->get(),
+            'reviews' => Testimonial::latest()->get()
+        ];
         return response()->json($resArr);
     }
 }

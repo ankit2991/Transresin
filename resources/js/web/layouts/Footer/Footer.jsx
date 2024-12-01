@@ -6,6 +6,7 @@ import { FaLocationDot, FaLocationPin } from "react-icons/fa6";
 import { GiIndiaGate } from "react-icons/gi";
 import HomeHeading from "../../components/HomeHeading";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -616,9 +617,11 @@ const Footer = () => {
               rights reserved.
             </div>
             <div>
-              <a href="">Privacy Policy</a> | <a href="">Terms of Use</a> |{" "}
-              <a href="">Sales Policy</a> | <a href="">Legal</a> |{" "}
-              <a href="">Site Map</a>
+              <Link to="/page/privacy-policy">Privacy Policy</Link> |{" "}
+              <Link to="/page/terms-of-use">Terms of Use</Link> |{" "}
+              <Link to="/page/sales-policy">Sales Policy</Link> |{" "}
+              <Link to="/page/legal">Legal</Link> |{" "}
+              <Link to="/sitemap">Site Map</Link>
             </div>
             <div>INDIA</div>
           </div>

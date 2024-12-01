@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import HomeHeading from "../../../components/HomeHeading";
-import { useSelector } from "react-redux";
 
-const ApplicationProducts = () => {
-  const { menus } = useSelector((state) => state?.home);
-  const applications =
-    menus?.filter((menu) => menu.slug === "product-application")[0]?.data || [];
-
+const ApplicationProducts = ({ applications }) => {
   return (
     <section className=" bg-white">
       <div className="container mx-auto">
         <HomeHeading>Product By Application</HomeHeading>
 
         <div className="grid lg:grid-cols-6 grid-cols-3 lg:gap-16 gap-3 text-center">
-          {applications.map((app, index) => (
+          {applications?.map((app, index) => (
             <div key={index}>
               <img
                 src={app.image}

@@ -6,7 +6,9 @@ import useCart from "../../hooks/useCart";
 const ProductGrid = ({ product }) => {
   const { saveToCart } = useCart();
 
-  const [selectedPkg, setSelectedPkg] = useState(product.packages[0]);
+  const [selectedPkg, setSelectedPkg] = useState(
+    product?.packages?.length ? product?.packages[0] : {}
+  );
 
   return (
     <div key={product.id} className="bg-yellow-100 p-3 rounded-lg">
@@ -56,7 +58,7 @@ const ProductGrid = ({ product }) => {
         <div className="d-grid">
           <button
             className="bg-secondary py-2 rounded-md font-bold w-full flex items-center justify-center gap-2 text-primary-300 hover:bg-primary-300 hover:text-white"
-            onClick={() => saveToCart(product)}
+            onClick={() => saveToCart(product, selectedPkg)}
           >
             <BsCartPlus /> Add To Cart
           </button>

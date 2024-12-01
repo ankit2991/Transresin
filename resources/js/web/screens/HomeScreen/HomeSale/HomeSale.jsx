@@ -10,52 +10,15 @@ import { Link } from "react-router-dom";
 import { BiChevronDown } from "react-icons/bi";
 import ProductGrid from "../../../components/ProductGrid";
 
-const HomeSale = () => {
-  const sales = [
-    {
-      name: "Transbond MultiFill 1.8kg SET",
-      reviews: 367,
-      regular_price: 2499,
-      trade_price: 1699,
-      image: "/images/product2.png",
-    },
-    {
-      name: "Transbond MultiFill 1.8kg SET",
-      reviews: 367,
-      regular_price: 2499,
-      trade_price: 1699,
-      image: "/images/product2.png",
-    },
-    {
-      name: "Transbond MultiFill 1.8kg SET",
-      reviews: 367,
-      regular_price: 2499,
-      trade_price: 1699,
-      image: "/images/product2.png",
-    },
-    {
-      name: "Transbond MultiFill 1.8kg SET",
-      reviews: 367,
-      regular_price: 2499,
-      trade_price: 1699,
-      image: "/images/product2.png",
-    },
-    {
-      name: "Transbond MultiFill 1.8kg SET",
-      reviews: 367,
-      regular_price: 2499,
-      trade_price: 1699,
-      image: "/images/product2.png",
-    },
-  ];
+const HomeSale = ({ products }) => {
   return (
     <section className="">
       <div className="container mx-auto">
         <HomeHeading>Sale</HomeHeading>
 
         <div className="grid lg:grid-cols-5 grid-cols-2 gap-3 mb-5">
-          {sales?.map((sale, index) => (
-            <ProductGrid product={sale} />
+          {products?.map((product) => (
+            <ProductGrid product={product} />
           ))}
         </div>
 

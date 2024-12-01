@@ -275,7 +275,7 @@ const ProductDetail = () => {
             </div>
 
             <div
-              className="text-sm text-primary-300 font-bold"
+              className="text-sm text-primary-300 font-bold editor-content"
               dangerouslySetInnerHTML={{ __html: product?.description1 }}
             ></div>
 
@@ -452,7 +452,7 @@ const ProductDetail = () => {
           </div>
 
           <div
-            className="text-primary-300 mb-10"
+            className="text-primary-300 mb-10 editor-content"
             dangerouslySetInnerHTML={{ __html: product?.description2 }}
           ></div>
 
@@ -590,7 +590,7 @@ const ProductDetail = () => {
           </div>
 
           <div
-            className="text-primary-300 mb-10"
+            className="text-primary-300 mb-10 editor-content"
             dangerouslySetInnerHTML={{ __html: product?.description3 }}
           ></div>
 

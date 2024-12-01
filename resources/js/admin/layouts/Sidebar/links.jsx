@@ -1,6 +1,14 @@
 import { BiGrid, BiGridAlt, BiSolidDashboard } from "react-icons/bi";
 import { BsApp } from "react-icons/bs";
-import { FaClipboardList, FaHeart } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaComment,
+  FaFile,
+  FaFileAlt,
+  FaHeart,
+  FaUsers,
+  FaVideo,
+} from "react-icons/fa";
 
 export const ADMIN_URL = "/transresin-panel/";
 
@@ -52,7 +60,27 @@ export const links = [
   },
   {
     label: "Order Lists",
-    target: "",
+    target: "order",
     icon: <FaClipboardList />,
+  },
+  {
+    label: "Users",
+    target: "user",
+    icon: <FaUsers />,
+  },
+  {
+    label: "Pages",
+    target: "page",
+    icon: <FaFileAlt />,
+  },
+  {
+    label: "Videos",
+    target: "video",
+    icon: <FaVideo />,
+  },
+  {
+    label: "Testimonial",
+    target: "testimonial",
+    icon: <FaComment />,
   },
 ];

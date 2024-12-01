@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import ApiExecute from "../../api";
 import { useDispatch } from "react-redux";
 import { setMenus } from "../../redux/actions/homeActions";
@@ -8,6 +8,12 @@ import Footer from "./Footer";
 
 const MobileLayout = () => {
   const dispatch = useDispatch();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top-left corner
+  }, [location]);
 
   useEffect(() => {
     const fetchCategories = async () => {

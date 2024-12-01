@@ -19,6 +19,32 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
+        if (!empty($request->application)) {
+            $query->whereHas('application', function ($q) use ($request) {
+                $q->where('slug', $request->application);
+            });
+        }
+        if (!empty($request->sub_application)) {
+            $query->whereHas('subApplication', function ($q) use ($request) {
+                $q->where('slug', $request->sub_application);
+            });
+        }
+        if (!empty($request->category)) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+        if (!empty($request->industry_category)) {
+            $query->whereHas('industry_category', function ($q) use ($request) {
+                $q->where('slug', $request->industry_category);
+            });
+        }
+        if (!empty($request->brand)) {
+            $query->whereHas('brand', function ($q) use ($request) {
+                $q->where('slug', $request->brand);
+            });
+        }
+
         // Apply pagination limit if provided, otherwise default to 10
         $products = $query->with(['category', 'industryCategory', 'application', 'brand', 'hsnCode', 'packages'])->latest()->paginate($request->get('limit', 10));
 
@@ -278,7 +304,7 @@ class ProductController extends Controller
 
         if (!empty($request->cartItems)) {
             foreach ($request->cartItems as $pId => $qty) {
-                $product = Product::select('id', 'name', 'image', 'regular_price', 'trade_price', 'description')->find($pId);
+                $product = ProductPackage::with(['product'])->has('product')->findOrFail($pId);
                 $product->qty = $qty;
                 $cartItems[] = $product;
             }

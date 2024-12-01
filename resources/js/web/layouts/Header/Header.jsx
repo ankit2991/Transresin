@@ -97,7 +97,7 @@ const Header = () => {
                     {link?.data.map((category) => (
                       <li key={category.id}>
                         <Link
-                          to={`/category/${category.id}`}
+                          to={`/${link.slug}/${category.slug}`}
                           className="flex items-center"
                         >
                           {category.image && (
@@ -114,7 +114,9 @@ const Header = () => {
                           <ul>
                             {category?.children?.map((subCategory) => (
                               <li key={subCategory.id}>
-                                <Link to={`/category/${subCategory.id}`}>
+                                <Link
+                                  to={`/${link.slug}/${category.slug}/${subCategory.slug}`}
+                                >
                                   {subCategory.name}
                                 </Link>
                               </li>

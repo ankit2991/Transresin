@@ -14,6 +14,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, MustVerifyEmail;
 
+    protected $appends = ['name'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -44,4 +46,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getImageAttribute($image)
+    {
+        return $image ? asset('storage/' . $image) : null;
+    }
+
+    public function getNameAttribute()
+    {
+        return trim($this->first_name . " " . $this->last_name);
+    }
 }

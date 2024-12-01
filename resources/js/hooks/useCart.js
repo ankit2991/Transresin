@@ -45,8 +45,8 @@ const useCart = () => {
     }
   }, [cartItems]);
 
-  const saveToCart = (product, qty = 1) => {
-    dispatch(addToCart(product.id, qty));
+  const saveToCart = (product, pkg, qty = 1) => {
+    dispatch(addToCart(pkg?.id, qty));
     toast.success(`Product ${product.name} has been added to cart.`);
   };
 

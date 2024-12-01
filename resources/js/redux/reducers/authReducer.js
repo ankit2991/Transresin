@@ -1,4 +1,5 @@
 import { LOGIN_SUCCESS, LOGOUT_SUCCESS } from "../constants/authConstant";
+import { UPDATE_USER } from "../constants/authConstant copy";
 
 const user = localStorage.getItem("@user");
 const token = localStorage.getItem("@token");
@@ -27,6 +28,9 @@ export default function authReducer(state = initialState, action) {
       break;
 
     case LOGOUT_SUCCESS:
+      localStorage.removeItem("@user");
+      localStorage.removeItem("@token");
+
       updatedState = {
         ...state,
         isLoggedIn: false,
@@ -34,6 +38,14 @@ export default function authReducer(state = initialState, action) {
         token: null,
       };
       break;
+
+    case UPDATE_USER:
+      localStorage.setItem("@user", JSON.stringify(payload));
+
+      updatedState = {
+        ...state,
+        user: payload,
+      };
 
     default:
       break;

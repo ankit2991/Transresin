@@ -5,14 +5,19 @@ use App\Http\Controllers\BrandsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DealerEnquiryController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HsnCodeController;
 use App\Http\Controllers\IndustryCategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VideoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +45,12 @@ Route::get('/email/verify/{user}/{hash}', [UserController::class, 'verify'])->mi
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [LoginController::class, 'doLogout']);
 
+    Route::get('/order', [OrderController::class, 'index']);
+    Route::post('/order', [OrderController::class, 'store']);
+
+    Route::get('/dealer-enquiry', [DealerEnquiryController::class, 'index']);
+    Route::delete('/dealer-enquiry/:dealerEnquiry', [DealerEnquiryController::class, 'destroy']);
+
     Route::apiResources([
         'category' => CategoryController::class,
         'application' => ApplicationController::class,
@@ -49,14 +60,28 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'product' => ProductController::class,
         'material' => MaterialController::class,
         'feature' => FeatureController::class,
+        'page' => PageController::class,
+        'user' => UserController::class,
+        'video' => VideoController::class,
+        'testimonial' => TestimonialController::class,
     ]);
+
+
+    Route::post('edit-profile', [UserController::class, 'editProfile']);
+    Route::post('change-password', [UserController::class, 'changePassword']);
 });
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/home', [HomeController::class, 'front']);
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/web/product/{product}', [ProductController::class, 'show']);
+Route::get('/web/page/{page}', [PageController::class, 'show']);
 Route::get('/application', [ApplicationController::class, 'index']);
 Route::get('/industry', [IndustryCategoryController::class, 'index']);
 Route::get('/brand', [BrandsController::class, 'index']);
 Route::post('/cart', [ProductController::class, 'cart']);
+Route::get('/my-orders', [OrderController::class, 'index']);
+Route::get('/order/{order}', [OrderController::class, 'show']);
+Route::post('/order', [OrderController::class, 'store']);
+Route::post('/dealer-enquiry', [DealerEnquiryController::class, 'store']);

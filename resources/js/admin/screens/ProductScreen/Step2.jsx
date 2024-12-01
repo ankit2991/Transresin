@@ -70,7 +70,7 @@ const Step2 = ({ onSubmit }) => {
           discount = parseFloat(discount) || 0;
           setFieldValue(
             `packagings[${index}].trade_price`,
-            regular_price - (regular_price * discount) / 100
+            Math.round(regular_price - (regular_price * discount) / 100)
           );
         };
 

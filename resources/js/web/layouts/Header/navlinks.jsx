@@ -1,40 +1,19 @@
 export const navLinks = [
-  // {
-  //   label: "Product By Application",
-  //   target: "/",
-  //   children: [
-  //     {
-  //       label: "",
-  //     },
-  //   ],
-  // },
-  // {
-  //   label: "Product Category",
-  //   target: "/",
-  // },
-  // {
-  //   label: "Industry Category",
-  //   target: "/",
-  // },
-  // {
-  //   label: "Brands",
-  //   target: "/",
-  // },
   {
     label: "Product Finder",
     target: "/product",
   },
   {
     label: "About Us",
-    target: "/",
+    target: "/page/about-us",
   },
   {
     label: "Career",
-    target: "/",
+    target: "/career",
   },
   {
     label: "Become Our Dealer",
-    target: "/",
+    target: "/become-our-dealer",
   },
   {
     label: "Contact Us",

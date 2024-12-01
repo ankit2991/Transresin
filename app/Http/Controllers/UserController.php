@@ -27,11 +27,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $query = User::query();
+        $query = User::where('role', 'user');
 
-        $users = $query->latest()->get();
+        $users = $query->latest()->paginate($request?->limit ?: 10);
 
         return response()->json($users);
     }
@@ -108,18 +108,40 @@ class UserController extends Controller
         ]);
     }
 
+    public function editProfile(Request $request)
+    {
+        $user = $request->user();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Success! Details has been updated.',
+            'user' => $user
+        ]);
+    }
+
     public function changePassword(Request $request)
     {
         $request->validate([
+            'current_password' => 'required',
             'password' => 'required|confirmed'
         ]);
 
         $user = $request->user();
+
+        // Check if the current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 400);
+        }
+
+        // Update the password
         $user->password = Hash::make($request->password);
         $user->save();
 
         return response()->json([
             'message' => 'Success! Your password has been changed.',
+            'user' => $user
         ]);
     }
 

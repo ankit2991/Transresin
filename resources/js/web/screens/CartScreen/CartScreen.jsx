@@ -28,14 +28,12 @@ const CartScreen = () => {
     updateToCart(product, qty);
   };
 
-  const discountCode = "SAVE20";
   const discountAmount = cartProducts
     .reduce(
       (acc, item) => acc + (item.regular_price - item.trade_price) * item?.qty,
       0
     )
     .toFixed(2);
-  const shippingCost = 6.99;
   const subtotal = cartProducts
     .reduce((acc, item) => acc + item.regular_price * item?.qty, 0)
     .toFixed(2);
@@ -44,94 +42,99 @@ const CartScreen = () => {
     .toFixed(2);
 
   return (
-    <div className="container mx-auto">
-      {cartCounter ? (
-        <div className="flex py-10 gap-5">
-          <div className="grow shadow-lg border border-gray-100 p-5 rounded-lg">
-            <h2 className="mb-3 font-bold text-2xl text-primary-300">
-              Shopping Cart
-            </h2>
-            <div>
-              {cartLoading ? (
-                <div>
-                  <Spinner />
-                </div>
-              ) : (
-                <>
-                  {cartProducts.map((item, index) => (
-                    <div className="flex items-center mb-5 gap-5" key={index}>
-                      <div>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="aspect-square w-12 rounded object-contain"
-                        />
-                      </div>
-                      <div className="grow">
-                        <div className="font-bold">
-                          <span>{item.name}</span>
+    <div className="bg-blue-50">
+      {/* Hero Section */}
+      <section className="bg-primary-600 text-white py-16">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl font-bold mb-4">Shopping Cart</h1>
+        </div>
+      </section>
+      <div className="container mx-auto">
+        {cartCounter ? (
+          <div className="flex py-10 gap-5">
+            <div className="grow shadow-lg bg-white border border-gray-100 p-5 rounded-lg">
+              <div>
+                {cartLoading ? (
+                  <div>
+                    <Spinner />
+                  </div>
+                ) : (
+                  <>
+                    {/* {JSON.stringify(cartProducts)} */}
+                    {cartProducts.map((item, index) => (
+                      <div className="flex items-center mb-5 gap-5" key={index}>
+                        <div>
+                          <img
+                            src={item?.product?.image}
+                            alt={item?.product?.name}
+                            className="aspect-square w-12 rounded object-contain"
+                          />
+                        </div>
+                        <div className="grow">
+                          <div className="font-bold text-primary-300">
+                            {item?.product?.name} ({item?.name})
+                          </div>
+                          <div>
+                            <del className="me-3 text-gray-400">
+                              ₹{item.regular_price}
+                            </del>
+                            <span className="text-primary-300 font-bold text-xl">
+                              ₹{item.trade_price.toFixed(2)}
+                            </span>
+                          </div>
                         </div>
                         <div>
-                          <del className="me-3 text-gray-400">
-                            ₹{item.regular_price}
-                          </del>
-                          <span className="text-primary-300 font-bold text-xl">
-                            ₹{item.trade_price.toFixed(2)}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="bg-primary-300 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                              onClick={() => handleUpdate("minus", item)}
+                              disabled={item.qty === 1}
+                            >
+                              <BiMinus />
+                            </button>
+                            <input
+                              type="text"
+                              value={item.qty}
+                              readOnly
+                              className="text-center w-[70px] border rounded"
+                            />
+                            <button
+                              className="bg-primary-300 text-white rounded-full"
+                              onClick={() => handleUpdate("plus", item)}
+                            >
+                              <BiPlus />
+                            </button>
+                          </div>
+                        </div>
+                        <div>₹{(item.trade_price * item.qty).toFixed(2)}</div>
+                        <div>
+                          <button
+                            className="text-gray-400 hover:text-red-500"
+                            onClick={() => removeCart(item)}
+                          >
+                            <MdDelete />
+                          </button>
                         </div>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <button
-                            className="bg-primary-300 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={() => handleUpdate("minus", item)}
-                            disabled={item.qty === 1}
-                          >
-                            <BiMinus />
-                          </button>
-                          <input
-                            type="text"
-                            value={item.qty}
-                            readOnly
-                            className="text-center w-[70px] border rounded"
-                          />
-                          <button
-                            className="bg-primary-300 text-white rounded-full"
-                            onClick={() => handleUpdate("plus", item)}
-                          >
-                            <BiPlus />
-                          </button>
-                        </div>
-                      </div>
-                      <div>₹{(item.trade_price * item.qty).toFixed(2)}</div>
-                      <div>
-                        <button
-                          className="text-gray-400 hover:text-red-500"
-                          onClick={() => removeCart(item)}
-                        >
-                          <MdDelete />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </>
-              )}
+                    ))}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="bg-white border-gray-100 p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
+            <div className="bg-white border-gray-100 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Order Summary</h3>
 
-            <div className="flex justify-between items-center mb-4">
-              <span className="bg-primary-300 text-white px-3 py-1 rounded">
-                {cartCounter} items
-              </span>
-              <span className="font-semibold text-lg">₹{subtotal}</span>
-            </div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="bg-primary-300 text-white px-3 py-1 rounded">
+                  {cartCounter} items
+                </span>
+                {/* <span className="font-semibold text-lg">₹{subtotal}</span> */}
+              </div>
 
-            {/* Divider */}
-            <hr className="border-gray-200 my-4" />
+              {/* Divider */}
+              <hr className="border-gray-200 my-4" />
 
-            {/* <div className="mb-4">
+              {/* <div className="mb-4">
               <label htmlFor="shipping" className="block mb-1 font-medium">
                 Shipping Method:
               </label>
@@ -145,8 +148,8 @@ const CartScreen = () => {
               </select>
             </div> */}
 
-            {/* Divider */}
-            <hr className="border-gray-200 my-4" />
+              {/* Divider */}
+              {/* <hr className="border-gray-200 my-4" />
 
             <div className="mb-4">
               <label htmlFor="discount" className="block mb-1 font-medium">
@@ -166,53 +169,61 @@ const CartScreen = () => {
                   <BiCheck />
                 </button>
               </div>
-            </div>
+            </div> */}
 
-            {/* Divider */}
-            <hr className="border-gray-200 my-4" />
+              {/* Divider */}
+              {/* <hr className="border-gray-200 my-4" /> */}
 
-            <div className="text-sm mb-4">
-              <p className="flex justify-between">
-                <span>Discount:</span>
-                <span>₹{discountAmount}</span>
-              </p>
-              {/* <p className="flex justify-between">
+              <div className="text-sm mb-4">
+                <p className="flex justify-between">
+                  <span className="font-bold">Total Amount:</span>
+                  <span>₹{subtotal}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="font-bold">Discount:</span>
+                  <span>(&minus;) ₹{discountAmount}</span>
+                </p>
+                {/* <p className="flex justify-between">
                 <span>Shipping:</span>
                 <span>₹{shippingCost.toFixed(2)}</span>
               </p> */}
+              </div>
+
+              {/* Divider */}
+              <hr className="border-gray-200 my-4" />
+
+              <p className="flex flex-col my-5">
+                <span>Total Payable Amount:</span>
+                <span className="font-bold text-3xl text-primary-300">
+                  ₹{finalTotal}
+                </span>
+              </p>
+
+              {/* Divider */}
+              <hr className="border-gray-200 my-4" />
+
+              <Link
+                to="/checkout"
+                className="bg-primary-300 text-white rounded-lg py-3 px-10 w-full hover:bg-primary-600 transition-colors text-xl"
+              >
+                Continue to Checkout
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center py-16">
+            <MdShoppingCart size={128} className="text-primary-300" />
+            <div className="text-3xl font-bold text-primary-300">
+              Cart is empty
             </div>
 
-            {/* Divider */}
-            <hr className="border-gray-200 my-4" />
-
-            <p className="flex flex-col my-5">
-              <span>Total Payable Amount:</span>
-              <span className="font-bold text-3xl text-primary-300">
-                ₹{finalTotal}
-              </span>
-            </p>
-
-            {/* Divider */}
-            <hr className="border-gray-200 my-4" />
-
-            <button className="bg-primary-300 text-white rounded-lg py-2 w-full hover:bg-primary-600 transition-colors">
-              Continue to Checkout
-            </button>
+            <Link to={`/product`} className="btn-primary">
+              Continoue Shopping
+              <FaArrowRightLong />
+            </Link>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center py-16">
-          <MdShoppingCart size={128} className="text-primary-300" />
-          <div className="text-3xl font-bold text-primary-300">
-            Cart is empty
-          </div>
-
-          <Link to={`/product`} className="btn-primary">
-            Continoue Shopping
-            <FaArrowRightLong />
-          </Link>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

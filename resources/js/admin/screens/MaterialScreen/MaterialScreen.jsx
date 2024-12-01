@@ -4,13 +4,14 @@ import Actions from "../../components/Actions";
 import swal from "sweetalert";
 import LaravelPagination from "../../components/LaravelPagination";
 import AddMaterial from "./AddMaterial";
+import Spinner from "../../components/Spinner";
 
 const MaterialScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMaterials, setSelectedMaterial] = useState(null);
-  const [entries, setEntries] = useState(10);
-  const [search, setSearch] = useState("");
   const [materials, setMaterials] = useState({});
+
+  const [loading, setLoading] = useState(false);
 
   const [limit, setLimit] = useState(10);
 
@@ -21,9 +22,11 @@ const MaterialScreen = () => {
 
   const fetchMaterials = useCallback(
     async (page = 1) => {
+      setLoading(true);
       const apiResponse = await ApiExecute(
         `material?page=${page}&limit=${limit}`
       );
+      setLoading(false);
 
       if (apiResponse.status) setMaterials(apiResponse.data);
     },
@@ -95,49 +98,55 @@ const MaterialScreen = () => {
 
       <div className="bg-white shadow-lg rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">All Materials</h2>
-        <LaravelPagination
-          items={materials}
-          fetchData={fetchMaterials}
-          limit={limit}
-          setLimit={setLimit}
-        >
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Sr. No.</th>
-                <th>Material Name</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {materials?.data?.map((material, index) => {
-                const hasChildren = materials.data.some(
-                  (cat) => cat.parent?.id === material.id
-                );
-                return (
-                  <tr key={index}>
-                    <td>{index + materials.from}.</td>
-                    <td>
-                      <img
-                        src={material.image}
-                        alt=""
-                        className="size-10 rounded border border-3 border-black object-contain inline-block me-2"
-                      />
-                      {material.name}
-                    </td>
-                    <td>
-                      <Actions
-                        preventDelete={hasChildren}
-                        editCallback={() => toggleModal(material)}
-                        deleteCallback={() => deleteCategory(material.slug)}
-                      />
-                    </td>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <LaravelPagination
+              items={materials}
+              fetchData={fetchMaterials}
+              limit={limit}
+              setLimit={setLimit}
+            >
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Sr. No.</th>
+                    <th>Material Name</th>
+                    <th>Action</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </LaravelPagination>
+                </thead>
+                <tbody>
+                  {materials?.data?.map((material, index) => {
+                    const hasChildren = materials.data.some(
+                      (cat) => cat.parent?.id === material.id
+                    );
+                    return (
+                      <tr key={index}>
+                        <td>{index + materials.from}.</td>
+                        <td>
+                          <img
+                            src={material.image}
+                            alt=""
+                            className="size-10 rounded border border-3 border-black object-contain inline-block me-2"
+                          />
+                          {material.name}
+                        </td>
+                        <td>
+                          <Actions
+                            preventDelete={hasChildren}
+                            editCallback={() => toggleModal(material)}
+                            deleteCallback={() => deleteCategory(material.slug)}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </LaravelPagination>
+          </>
+        )}
       </div>
 
       {/* Modal for adding a new product material */}

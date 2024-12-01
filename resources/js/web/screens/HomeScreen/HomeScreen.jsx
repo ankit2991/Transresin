@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HomeHeading from "../../components/HomeHeading";
 const ApplicationProducts = React.lazy(() => import("./ApplicationProducts"));
@@ -8,10 +8,27 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Fancybox from "../../components/Fancybox";
 import { BiPlayCircle } from "react-icons/bi";
 import { BsFillStarFill } from "react-icons/bs";
+import ApiExecute from "../../../api";
+import Spinner from "../../components/Spinner";
+import { createYT_Thumb } from "../../../utils/youtube";
+import { FaYoutube } from "react-icons/fa";
 // import { useSelector } from "react-redux";
 
 const HomeScreen = () => {
   // const { menus } = useSelector((state) => state?.home);
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      let apiResponse = await ApiExecute("home");
+      setLoading(false);
+      if (apiResponse.status) setData(apiResponse.data);
+    }
+    fetchData();
+  }, []);
+
+  if (loading) return <Spinner />;
 
   return (
     <div className="bg-white">
@@ -45,8 +62,8 @@ const HomeScreen = () => {
       </section>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <ApplicationProducts />
-        <HomeSale />
+        <ApplicationProducts applications={data?.applications || []} />
+        <HomeSale products={data?.products || []} />
       </Suspense>
 
       <section className=" bg-white">
@@ -54,64 +71,25 @@ const HomeScreen = () => {
           <HomeHeading>Videos</HomeHeading>
           <Fancybox>
             <div className="grid lg:grid-cols-3 gap-5">
-              <div>
-                <a
-                  href="https://www.youtube.com/watch?v=MdPemLJ99YI"
-                  className="rounded-lg overflow-hidden border relative gallery block"
-                  data-fancybox="gallery"
-                >
-                  <img
-                    src="https://img.youtube.com/vi/MdPemLJ99YI/hqdefault.jpg"
-                    alt=""
-                    className="aspect-video w-full"
-                  />
-                  <div className="absolute start-0 end-0 top-0 bottom-0 bg-white bg-opacity-30 z-10  justify-center items-center flex">
-                    <BiPlayCircle size={50} className="text-primary-300" />
-                  </div>
-                </a>
-                <div className="text-primary-300 text-xs">
-                  TransFloor Epoxy Flooring Solution - Complete Process Video
+              {data?.videos?.map((video) => (
+                <div key={video.id}>
+                  <a
+                    href={video.youtube_video_url}
+                    className="rounded-lg overflow-hidden border relative gallery block"
+                    data-fancybox="gallery"
+                  >
+                    <img
+                      src={createYT_Thumb(video.youtube_video_url)}
+                      alt=""
+                      className="aspect-video w-full object-cover"
+                    />
+                    <div className="absolute start-0 end-0 top-0 bottom-0 bg-white bg-opacity-30 z-10  justify-center items-center flex">
+                      <FaYoutube size={50} className="text-red-600" />
+                    </div>
+                  </a>
+                  <div className="text-primary-300 text-xs">{video.title}</div>
                 </div>
-              </div>
-              <div>
-                <a
-                  href="https://www.youtube.com/watch?v=RrIFAfXr4nw"
-                  className="rounded-lg overflow-hidden border relative gallery block"
-                  data-fancybox="gallery"
-                >
-                  <img
-                    src="https://img.youtube.com/vi/RrIFAfXr4nw/hqdefault.jpg"
-                    alt=""
-                    className="aspect-video w-full"
-                  />
-                  <div className="absolute start-0 end-0 top-0 bottom-0 bg-white bg-opacity-30 z-10  justify-center items-center flex">
-                    <BiPlayCircle size={50} className="text-primary-300" />
-                  </div>
-                </a>
-                <div className="text-primary-300 text-xs">
-                  TransFloor Epoxy Flooring Solution - Complete Process Video
-                </div>
-              </div>
-
-              <div>
-                <a
-                  href="https://www.youtube.com/watch?v=QRqjn959mmc"
-                  className="rounded-lg overflow-hidden border relative gallery block"
-                  data-fancybox="gallery"
-                >
-                  <img
-                    src="https://img.youtube.com/vi/QRqjn959mmc/hqdefault.jpg"
-                    alt=""
-                    className="aspect-video w-full"
-                  />
-                  <div className="absolute start-0 end-0 top-0 bottom-0 bg-white bg-opacity-30 z-10  justify-center items-center flex">
-                    <BiPlayCircle size={50} className="text-primary-300" />
-                  </div>
-                </a>
-                <div className="text-primary-300 text-xs">
-                  TransFloor Epoxy Flooring Solution - Complete Process Video
-                </div>
-              </div>
+              ))}
             </div>
           </Fancybox>
         </div>
@@ -122,101 +100,32 @@ const HomeScreen = () => {
           <HomeHeading>REVIEWS</HomeHeading>
 
           <div className="grid lg:grid-cols-4 grid-cols-2 lg:gap-10 gap-3">
-            <div className="bg-gray-100 rounded-lg px-3 py-6 text-center">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1683121366070-5ceb7e007a97?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                alt=""
-                className="size-20 object-cover rounded-full inline-block"
-              />
-              <h4 className="text-primary-300 font-bold my-5">
-                "Best Non
-                <br />
-                Yellowing Resin"
-              </h4>
-              <div className="flex justify-center gap-1 text-yellow-500 mb-5">
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
+            {data?.reviews?.map((review) => (
+              <div
+                className="bg-gray-100 rounded-lg px-3 py-6 text-center"
+                key={review.id}
+              >
+                <img
+                  src={review.image}
+                  alt={review.name}
+                  className="size-20 object-cover rounded-full inline-block"
+                />
+                <h4 className="text-primary-300 font-bold my-5">
+                  "{review.comment}"
+                </h4>
+                <div className="flex justify-center gap-1 text-yellow-500 mb-5">
+                  <BsFillStarFill />
+                  <BsFillStarFill />
+                  <BsFillStarFill />
+                  <BsFillStarFill />
+                  <BsFillStarFill />
+                </div>
+                <div className="text-primary-300 font-semibold">
+                  <div>{review.name}</div>
+                  <div>{review.place}</div>
+                </div>
               </div>
-              <div className="text-primary-300 font-semibold">
-                <div>Sudanshu</div>
-                <div>Benguluru</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-100 rounded px-3 py-6  text-center">
-              <img
-                src="https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                alt=""
-                className="size-20 object-cover rounded-full inline-block"
-              />
-              <h4 className="text-primary-300 font-bold my-5">
-                "Best Non
-                <br />
-                Yellowing Resin"
-              </h4>
-              <div className="flex justify-center gap-1 text-yellow-500 mb-5">
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-              </div>
-              <div className="text-primary-300 font-semibold">
-                <div>Sudanshu</div>
-                <div>Benguluru</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-100 rounded px-3 py-6  text-center">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvi7HpQ-_PMSMOFrj1hwjp6LDcI-jm3Ro0Xw&s"
-                alt=""
-                className="size-20 object-cover rounded-full inline-block"
-              />
-              <h4 className="text-primary-300 font-bold my-5">
-                "Best Non
-                <br />
-                Yellowing Resin"
-              </h4>
-              <div className="flex justify-center gap-1 text-yellow-500 mb-5">
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-              </div>
-              <div className="text-primary-300 font-semibold">
-                <div>Sudanshu</div>
-                <div>Benguluru</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-100 rounded px-3 py-6  text-center">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQao4gtNUPfkO2enJ9OjcbrpQR4qeF4DOzQ-g&s"
-                alt=""
-                className="size-20 object-cover rounded-full inline-block"
-              />
-              <h4 className="text-primary-300 font-bold my-5">
-                "Best Non
-                <br />
-                Yellowing Resin"
-              </h4>
-              <div className="flex justify-center gap-1 text-yellow-500 mb-5">
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-                <BsFillStarFill />
-              </div>
-              <div className="text-primary-300 font-semibold">
-                <div>Sudanshu</div>
-                <div>Benguluru</div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

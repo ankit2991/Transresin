@@ -2,8 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import ProductImagePicker from "../../components/ProductImagePicker";
 import ImagePicker from "../../components/ImagePicker";
 import { Form, Formik } from "formik";
+import { FaAngleRight } from "react-icons/fa";
+import StepNav from "./StepNav";
 
-const Step3 = ({ initialValues, onSubmit, initialData }) => {
+const ProductImage = ({
+  initialValues,
+  onSubmit,
+  initialData,
+  step,
+  setStep,
+}) => {
   const formikRef = useRef(null);
 
   const [images, setImages] = useState(initialValues.images || []);
@@ -14,6 +22,10 @@ const Step3 = ({ initialValues, onSubmit, initialData }) => {
 
   return (
     <>
+      <label htmlFor="" className="form-label">
+        Choose Multiple Images
+      </label>
+      <ProductImagePicker images={images} setImages={setImages} />
       <Formik
         initialValues={{
           image: initialValues.image,
@@ -39,25 +51,12 @@ const Step3 = ({ initialValues, onSubmit, initialData }) => {
                 }}
               />
             </div>
-            {/* {JSON.stringify(values?.images)} */}
+            <StepNav step={step} setStep={setStep} />
           </Form>
         )}
       </Formik>
-
-      <label htmlFor="" className="form-label">
-        Choose Multiple Images
-      </label>
-      <ProductImagePicker images={images} setImages={setImages} />
-
-      <button
-        type="button"
-        onClick={formikRef.current?.handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-      >
-        Next
-      </button>
     </>
   );
 };
 
-export default Step3;
+export default ProductImage;

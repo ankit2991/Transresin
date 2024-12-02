@@ -5,8 +5,9 @@ import * as Yup from "yup";
 import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import Select from "react-select";
+import StepNav from "./StepNav";
 
-const Step1 = ({
+const BasicInformation = ({
   categories,
   brands,
   hsnCodes,
@@ -16,6 +17,8 @@ const Step1 = ({
   materials,
   initialValues,
   onSubmit,
+  step,
+  setStep,
 }) => {
   const validationScheme = Yup.object({
     // name: Yup.string().required("Product Name is required"),
@@ -37,9 +40,6 @@ const Step1 = ({
         description3: initialValues.description3,
         category_id: initialValues.category_id,
         sub_category_id: initialValues.sub_category_id,
-        // regular_price: initialValues.regular_price,
-        // discount: initialValues.discount,
-        // trade_price: initialValues.trade_price,
         application_id: initialValues.application_id,
         sub_application_id: initialValues.sub_application_id,
         industry_category_id: initialValues.industry_category_id,
@@ -52,18 +52,6 @@ const Step1 = ({
       validationSchema={validationScheme}
     >
       {({ values, setFieldValue, errors, touched }) => {
-        // useEffect(() => {
-        //   // Calculate trade_price whenever regular_price or discount changes
-        //   const tradePrice =
-        //     values.regular_price &&
-        //     values.discount >= 0 &&
-        //     values.discount <= 100
-        //       ? values.regular_price * ((100 - values.discount) / 100)
-        //       : values.regular_price;
-
-        //   setFieldValue("trade_price", tradePrice);
-        // }, [values.regular_price, values.discount, setFieldValue]);
-
         return (
           <Form>
             <div className="grid grid-cols-12 gap-4">
@@ -129,12 +117,12 @@ const Step1 = ({
                     </div>
                   </div>
 
-                  <button
+                  {/* <button
                     type="submit"
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                   >
                     Next
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="col-span-4">
@@ -364,6 +352,8 @@ const Step1 = ({
                 </div>
               </div>
             </div>
+
+            <StepNav step={step} setStep={setStep} />
           </Form>
         );
       }}
@@ -371,4 +361,4 @@ const Step1 = ({
   );
 };
 
-export default Step1;
+export default BasicInformation;

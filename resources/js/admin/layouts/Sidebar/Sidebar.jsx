@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaHome,
-  FaBox,
-  FaHeart,
-  FaClipboardList,
-  FaCog,
-  FaSignOutAlt,
-  FaAngleDown,
-} from "react-icons/fa";
+import { FaCog, FaSignOutAlt, FaAngleDown } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { ADMIN_URL, links } from "./links";
 
@@ -27,12 +19,11 @@ const Sidebar = () => {
       <nav className="p-4 space-y-2 flex-1 overflow-auto">
         <ul>
           {links?.map((link, index) => (
-            <li>
+            <li key={index}>
               <NavLink
                 to={link.target && `${ADMIN_URL}${link.target}`}
                 className={`flex items-center p-2 rounded-lg gap-3`}
                 end={link.target === ""}
-                key={index}
                 onClick={() =>
                   link?.children?.length > 0
                     ? setLinkOpen((prev) => (prev === index ? null : index))
@@ -50,11 +41,10 @@ const Sidebar = () => {
               {link?.children?.length > 0 && linkOpen === index && (
                 <ul className="ms-7">
                   {link.children.map((slink, sIndex) => (
-                    <li>
+                    <li key={sIndex}>
                       <NavLink
                         to={slink.target && `${ADMIN_URL}${slink.target}`}
                         className={`flex items-center p-2 rounded-lg gap-3`}
-                        key={sIndex}
                       >
                         {slink.icon} {slink.label}
                       </NavLink>

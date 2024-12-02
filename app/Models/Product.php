@@ -12,6 +12,10 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $cast = [
+        "faqs" => 'array'
+    ];
+
     public function getImageAttribute($image)
     {
         return $image ? asset('storage/' . $image) : null;

@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import ImagePicker from "../../components/ImagePicker";
+import StepNav from "./StepNav";
 
-const Step2 = ({ onSubmit }) => {
+const ProductPackage = ({ onSubmit, step, setStep }) => {
   // Validation Schema
   const validationSchema = Yup.object({
     // packagings: Yup.array()
@@ -213,14 +214,7 @@ const Step2 = ({ onSubmit }) => {
             >
               Add Packaging
             </button>
-            <div>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              >
-                Next
-              </button>
-            </div>
+            <StepNav step={step} setStep={setStep} />
           </Form>
         );
       }}
@@ -228,4 +222,4 @@ const Step2 = ({ onSubmit }) => {
   );
 };
 
-export default Step2;
+export default ProductPackage;

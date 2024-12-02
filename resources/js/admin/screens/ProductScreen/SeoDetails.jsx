@@ -1,8 +1,9 @@
 import React from "react";
 import SeoMeta from "../../layouts/Modal/SeoMeta";
 import { Form, Formik } from "formik";
+import StepNav from "./StepNav";
 
-const Step4 = ({ initialValues, onSubmit }) => (
+const SeoDetails = ({ initialValues, onSubmit, step, setStep }) => (
   <Formik
     initialValues={{
       seo_title: initialValues.seo_title,
@@ -14,15 +15,10 @@ const Step4 = ({ initialValues, onSubmit }) => (
     {() => (
       <Form>
         <SeoMeta />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-        >
-          Submit
-        </button>
+        <StepNav step={step} setStep={setStep} isEnd={true} />
       </Form>
     )}
   </Formik>
 );
 
-export default Step4;
+export default SeoDetails;

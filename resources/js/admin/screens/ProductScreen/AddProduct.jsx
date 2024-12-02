@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import ApiExecute from "../../../api";
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
-import Step4 from "./Step4";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import ProductFaq from "./ProductFaq";
+const ProductInstruction = lazy(() => import("./ProductInstruction"));
+const BasicInformation = lazy(() => import("./BasicInformation"));
+const ProductPackage = lazy(() => import("./ProductPackage"));
+const ProductImage = lazy(() => import("./ProductImage"));
+const SeoDetails = lazy(() => import("./SeoDetails"));
 
 const AddProduct = ({ initialData = null }) => {
   const [step, setStep] = useState(1);
@@ -40,9 +42,106 @@ const AddProduct = ({ initialData = null }) => {
     images: [],
     materials: [],
     features: [],
+    instruction: {},
+    faqs: [],
   });
 
   const navigate = useNavigate();
+
+  const steps = [
+    {
+      heading: "Basic Information",
+      component: (
+        <BasicInformation
+          applications={applications}
+          industryCategories={industryCategories}
+          brands={brands}
+          hsnCodes={hsnCodes}
+          categories={categories}
+          materials={materials}
+          features={features}
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+    {
+      heading: "Product Packaging",
+      component: (
+        <ProductPackage
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+    {
+      heading: "Product Images",
+      component: (
+        <ProductImage
+          initialValues={formData}
+          initialData={initialData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+    {
+      heading: "Product Instructions",
+      component: (
+        <ProductInstruction
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+    {
+      heading: "Product Questions",
+      component: (
+        <ProductFaq
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            setStep(step + 1);
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+    {
+      heading: "SEO Details",
+      component: (
+        <SeoDetails
+          initialValues={formData}
+          onSubmit={(values) => {
+            setFormData({ ...formData, ...values });
+            handleFinalSubmit();
+          }}
+          step={step}
+          setStep={setStep}
+        />
+      ),
+    },
+  ];
 
   useEffect(() => {
     const fetchDropdownData = async () => {
@@ -101,10 +200,11 @@ const AddProduct = ({ initialData = null }) => {
     <div className="container mx-auto p-6">
       <div className="bg-white shadow p-3 rounded-lg">
         <h1 className="text-2xl font-semibold mb-6">
-          {initialData ? "Edit Product" : "Add Product"}
+          {initialData ? "Edit Product" : "Add Product"} &raquo;{" "}
+          {steps[step - 1].heading}
         </h1>
 
-        {step === 1 && (
+        {/* {step === 1 && (
           <Step1
             applications={applications}
             industryCategories={industryCategories}
@@ -147,9 +247,11 @@ const AddProduct = ({ initialData = null }) => {
               handleFinalSubmit();
             }}
           />
-        )}
+        )} */}
 
-        <div className="flex justify-between mt-4">
+        {steps[step - 1].component}
+
+        {/* <div className="flex justify-between mt-4">
           {step > 1 && (
             <button
               type="button"
@@ -159,7 +261,7 @@ const AddProduct = ({ initialData = null }) => {
               Previous
             </button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

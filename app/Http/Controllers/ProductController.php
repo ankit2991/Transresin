@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductFeature;
 use App\Models\ProductImage;
+use App\Models\ProductInstruction;
 use App\Models\ProductPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -106,6 +107,9 @@ class ProductController extends Controller
             'sub_application_id' => $request->sub_application_id,
             'brand_id' => $request->brand_id,
             'hsn_code_id' => $request->hsn_code_id,
+            'instruction_description' => $request->instruction_description,
+            'faqs' => $request->faqs,
+
             // 'regular_price' => $request->regular_price,
             // 'discount' => $request->discount,
             // 'trade_price' => $request->trade_price,
@@ -117,6 +121,11 @@ class ProductController extends Controller
         // Handle the main image (if provided)
         if (!empty($request->image)) {
             $product->image = dataUriToImage($request->image, 'products');
+        }
+
+        // Handle the main image (if provided)
+        if (!empty($request->instruction_image)) {
+            $product->instruction_image = dataUriToImage($request->instruction_image, 'products');
         }
 
         $product->save();
@@ -139,6 +148,22 @@ class ProductController extends Controller
                 }
 
                 $productPackage->save();
+            }
+        }
+
+        if (!empty($request->instructions)) {
+            foreach ($request->instructions as $instruction) {
+                $productInstruction = new ProductInstruction();
+                $productInstruction->product_id = $product->id;
+                $productInstruction->title = $instruction['title'];
+                // $productInstruction->image = $instruction['image'];
+                $productInstruction->description = $instruction['description'];
+
+                if (!empty($package['image'])) {
+                    $productInstruction->image = dataUriToImage($instruction['image'], "products/{$product->id}/instructions");
+                }
+
+                $productInstruction->save();
             }
         }
 

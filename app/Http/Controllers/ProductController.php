@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\ProductFeature;
 use App\Models\ProductImage;
 use App\Models\ProductInstruction;
 use App\Models\ProductPackage;
@@ -109,6 +108,7 @@ class ProductController extends Controller
             'hsn_code_id' => $request->hsn_code_id,
             'instruction_description' => $request->instruction_description,
             'faqs' => $request->faqs,
+            'videos' => $request->videos,
 
             // 'regular_price' => $request->regular_price,
             // 'discount' => $request->discount,
@@ -207,15 +207,14 @@ class ProductController extends Controller
      */
     public function show($productSlug)
     {
-        // dd($productSlug);
         $product = Product::with([
             'productImages',
             'packages',
             'features',
-            'materials'
+            'materials',
+            'reviews',
+            'instructions'
         ])->where('slug', $productSlug)->firstOrFail();
-
-        // dd($product);
 
         return response()->json($product);
     }

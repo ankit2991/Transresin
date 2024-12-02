@@ -5,6 +5,7 @@ import ImagePicker from "./ImagePicker";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { BiTrash } from "react-icons/bi";
+import { FaTimes } from "react-icons/fa";
 
 // Define Yup validation schema
 const validationSchema = Yup.object().shape({
@@ -14,7 +15,7 @@ const validationSchema = Yup.object().shape({
   image: Yup.mixed().required("Image is required"),
 });
 
-const ProductImagePicker = ({ images, setImages }) => {
+const ProductImagePicker = ({ images, setImages, preview_cols = 10 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
@@ -60,7 +61,7 @@ const ProductImagePicker = ({ images, setImages }) => {
                 onClick={closeModal}
                 className="text-gray-600 hover:text-gray-900"
               >
-                &times;
+                <FaTimes />
               </button>
             </div>
 
@@ -150,7 +151,7 @@ const ProductImagePicker = ({ images, setImages }) => {
           <BiPlus /> Add Image
         </button>
       </div>
-      <div className="grid grid-cols-10 gap-4 py-3">
+      <div className={`grid grid-cols-${preview_cols} gap-4 py-3`}>
         {images?.map((img, index) => (
           <div key={index} className="border rounded-lg p-3 relative">
             <button

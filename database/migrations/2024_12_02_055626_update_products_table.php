@@ -15,6 +15,7 @@ return new class extends Migration
             $table->text("instruction_description")->nullable()->after("hsn_code_id");
             $table->string("instruction_image")->nullable()->after("instruction_description");
             $table->json("faqs")->nullable()->after("instruction_image");
+            $table->json("videos")->nullable()->after("faqs");
         });
     }
 
@@ -24,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['instruction_description', 'instruction_image', 'faqs']);
+            $table->dropColumn(['instruction_description', 'instruction_image', 'faqs', 'videos']);
         });
     }
 };

@@ -12,9 +12,24 @@ class Product extends Model
 
     protected $guarded = [];
 
-    protected $cast = [
-        "faqs" => 'array'
+    protected $casts = [
+        "faqs" => 'array',
+        "videos" => 'array',
     ];
+
+    // Append the average rating to the model's attributes
+    protected $appends = ['average_rating'];
+
+    /**
+     * Accessor for the average_rating attribute.
+     *
+     * @return float
+     */
+    public function getAverageRatingAttribute()
+    {
+        // Calculate the average rating for this product's reviews
+        return round($this->reviews()->avg('rating'), 1) ?? 0;
+    }
 
     public function getImageAttribute($image)
     {
@@ -106,5 +121,15 @@ class Product extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class, 'product_materials');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function instructions()
+    {
+        return $this->hasMany(ProductInstruction::class);
     }
 }

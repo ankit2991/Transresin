@@ -17,6 +17,7 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
@@ -71,8 +72,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'video' => VideoController::class,
         'testimonial' => TestimonialController::class,
         'slider' => SliderController::class,
+        'review' => ReviewController::class,
     ]);
-
 
     Route::post('edit-profile', [UserController::class, 'editProfile']);
     Route::post('change-password', [UserController::class, 'changePassword']);

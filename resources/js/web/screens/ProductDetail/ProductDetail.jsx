@@ -33,61 +33,57 @@ import Dropdown from "../../components/Dropdown";
 import { useMediaQuery } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ApiExecute from "../../../api";
+import ReviewModal from "./ReviewModal";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import moment from "moment";
+import StarRating from "../../../admin/components/StarRating";
 
 const ProductDetail = () => {
   const { slug } = useParams();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
   const isMobile = useMediaQuery("(max-width:768px)");
-
   const [qty, setQty] = useState(1);
-
-  const [products, setProducts] = useState([
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-    {
-      image: "/images/product2.png",
-    },
-  ]);
-
-  const sizes = [
-    {
-      name: "450 g SET",
-    },
-    {
-      name: "1.8 Kg SET",
-    },
-  ];
-
   const [activeSize, setActiveSize] = useState(0);
-
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { isLoggedIn, user } = useSelector((state) => state?.auth);
+
+  const handleReviewSubmit = async (reviewData) => {
+    let response = await ApiExecute("review", {
+      method: "POST",
+      data: reviewData,
+    });
+
+    if (response.status) {
+      toast.success(response.data?.message);
+    } else {
+      toast.warning("Oooops! Something went wrong, please try again.");
+    }
+    // try {
+    //   const response = await fetch('/api/reviews', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(reviewData),
+    //   });
+    //   if (!response.ok) throw new Error('Failed to submit review');
+    //   alert('Review submitted successfully!');
+    // } catch (error) {
+    //   alert(error.message);
+    // }
+  };
+
+  const handleWriteReview = () => {
+    if (isLoggedIn && user?.role === "user") {
+      setIsModalOpen(true);
+    } else {
+      toast.info("You need to log in to write a review!");
+    }
+  };
 
   useEffect(() => {
     if (!slug) return;
@@ -107,6 +103,12 @@ const ProductDetail = () => {
 
   return (
     <section className="lg:py-16">
+      <ReviewModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+        product_id={product?.id}
+      />
       <div className="container mx-auto">
         <div className="lg:grid lg:grid-cols-5 lg:gap-5">
           <div className="lg:flex lg:gap-5 lg:col-span-3">
@@ -223,7 +225,7 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="flex items-center py-[1px] px-1 bg-white border border-primary-300 rounded-lg gap-1 text-primary-300 font-bold">
-                <div className="text-2xl">4.5</div>
+                <div className="text-2xl">{product?.average_rating}</div>
                 <div>
                   <div className="flex gap-1 text-yellow-500">
                     <BiSolidStar size={10} />
@@ -232,7 +234,9 @@ const ProductDetail = () => {
                     <BiSolidStar size={10} />
                     <BiSolidStar size={10} />
                   </div>
-                  <div className="text-[10px]">367 Reviews</div>
+                  <div className="text-[10px]">
+                    {product?.reviews?.length} Reviews
+                  </div>
                 </div>
               </div>
             </div>
@@ -244,53 +248,12 @@ const ProductDetail = () => {
                   <div className="mt-1">{feature.name}</div>
                 </div>
               ))}
-              {/* <div>
-                <img src="/images/product-attributes/2.png" alt="" />
-                <div className="mt-1">Very High Bonding</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/3.png" alt="" />
-                <div className="mt-1">Termite Proof</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/4.png" alt="" />
-                <div className="mt-1">Moderate Flexibility</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/5.png" alt="" />
-                <div className="mt-1">High Viscous Liquid</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/6.png" alt="" />
-                <div className="mt-1">Chemical Resistant</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/7.png" alt="" />
-                <div className="mt-1">Multimaterial Bonding</div>
-              </div>
-              <div>
-                <img src="/images/product-attributes/8.png" alt="" />
-                <div className="mt-1">Screwable</div>
-              </div> */}
             </div>
 
             <div
               className="text-sm text-primary-300 font-bold editor-content"
               dangerouslySetInnerHTML={{ __html: product?.description1 }}
             ></div>
-
-            {/* <p className="mb-3 text-sm text-primary-300 font-bold">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut ipsum
-              cumque tenetur hic iusto perspiciatis magni velit nemo delectus
-              vero obcaecati nulla, similique nihil aperiam quam ducimus esse
-              corrupti fugit?
-            </p>
-            <p className="mb-3 text-sm text-primary-300 font-bold">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti
-              hic ullam labore eos odit facere, quae officiis dolorem non iste.
-              Voluptate officiis voluptatem deleniti distinctio blanditiis,
-              dolores animi sequi laboriosam?
-            </p> */}
 
             <div className="flex items-center gap-5 uppercase font-bold text-primary-300 text-center text-xs my-10">
               <div className="text-sm">Suitable For: </div>
@@ -300,22 +263,6 @@ const ProductDetail = () => {
                   <div>{mat.name}</div>
                 </div>
               ))}
-              {/* <div>
-                <img src="/images/stone.png" alt="" className="h-10 inline" />
-                <div>Stone</div>
-              </div>
-              <div>
-                <img
-                  src="/images/concrete.png"
-                  alt=""
-                  className="h-10 inline"
-                />
-                <div>Concrete</div>
-              </div>
-              <div>
-                <img src="/images/metal.png" alt="" className="h-10 inline" />
-                <div>Metal</div>
-              </div> */}
             </div>
 
             <div className="text-primary-300 font-bold uppercase">
@@ -456,99 +403,6 @@ const ProductDetail = () => {
             dangerouslySetInnerHTML={{ __html: product?.description2 }}
           ></div>
 
-          {/* <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Transbond MultiFill</h3>
-            <p className="text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime
-              odio officia molestiae voluptas praesentium doloremque assumenda
-              eligendi, nisi quam placeat soluta officiis dolores? Eos ex, rem
-              dolorum error maxime amet blanditiis. Itaque doloremque
-              aspernatur, eaque eligendi, vitae enim rem laboriosam aut unde
-              provident consectetur, ad quaerat ratione dolore blanditiis
-              necessitatibus nulla dolorem? Dolores minima iure repudiandae,
-              dolorem minus at corporis. Iste eveniet, reiciendis ducimus
-              dolorem iusto veniam suscipit repellendus doloribus ratione
-              excepturi ab, a facere praesentium quidem commodi voluptate
-              maiores tenetur accusantium aperiam consequatur dicta maxime
-              delectus, neque unde. Illo provident molestiae labore doloremque
-              earum nisi quam. Reprehenderit qui quod dolore aut nesciunt
-              nostrum mollitia laboriosam praesentium in quo id adipisci minima,
-              magnam dicta eligendi quia voluptatem repellat. Consectetur,
-              tempora adipisci dolorem delectus eius quod minus illo a maxime
-              numquam, necessitatibus debitis, optio explicabo sit enim dolore
-              aliquid nostrum praesentium placeat quaerat! Cumque sit minus
-              voluptatibus officiis quo exercitationem obcaecati nulla ducimus
-              non mollitia? Velit perferendis ratione nihil inventore provident
-              esse, sapiente cum aut. Ad cumque quasi dicta velit molestias.
-              Laborum mollitia, totam modi nostrum ipsam repudiandae cupiditate
-              incidunt nisi vero soluta expedita maiores ipsa magni inventore
-              obcaecati quod temporibus eum cum ratione voluptatem corrupti vel
-              rem? Culpa, minus vero?
-            </p>
-          </div>
-
-          <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Applications</h3>
-            <p className="text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime
-              odio officia molestiae voluptas praesentium doloremque assumenda
-              eligendi, nisi quam placeat soluta officiis dolores? Eos ex, rem
-              dolorum error maxime amet blanditiis. Itaque doloremque
-              aspernatur, eaque eligendi, vitae enim rem laboriosam aut unde
-              provident consectetur, ad quaerat ratione dolore blanditiis
-              necessitatibus nulla dolorem? Dolores minima iure repudiandae,
-              dolorem minus at corporis. Iste eveniet, reiciendis ducimus
-              dolorem iusto veniam suscipit repellendus doloribus ratione
-              excepturi ab, a facere praesentium quidem commodi voluptate
-              maiores tenetur accusantium aperiam consequatur dicta maxime
-              delectus, neque unde. Illo provident molestiae labore doloremque
-              earum nisi quam. Reprehenderit qui quod dolore aut nesciunt
-              nostrum mollitia laboriosam praesentium in quo id adipisci minima,
-              magnam dicta eligendi quia voluptatem repellat. Consectetur,
-              tempora adipisci dolorem delectus eius quod minus illo a maxime
-              numquam, necessitatibus debitis, optio explicabo sit enim dolore
-              aliquid nostrum praesentium placeat quaerat! Cumque sit minus
-              voluptatibus officiis quo exercitationem obcaecati nulla ducimus
-              non mollitia? Velit perferendis ratione nihil inventore provident
-              esse, sapiente cum aut. Ad cumque quasi dicta velit molestias.
-              Laborum mollitia, totam modi nostrum ipsam repudiandae cupiditate
-              incidunt nisi vero soluta expedita maiores ipsa magni inventore
-              obcaecati quod temporibus eum cum ratione voluptatem corrupti vel
-              rem? Culpa, minus vero?
-            </p>
-          </div>
-
-          <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Advantages</h3>
-            <p className="text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime
-              odio officia molestiae voluptas praesentium doloremque assumenda
-              eligendi, nisi quam placeat soluta officiis dolores? Eos ex, rem
-              dolorum error maxime amet blanditiis. Itaque doloremque
-              aspernatur, eaque eligendi, vitae enim rem laboriosam aut unde
-              provident consectetur, ad quaerat ratione dolore blanditiis
-              necessitatibus nulla dolorem? Dolores minima iure repudiandae,
-              dolorem minus at corporis. Iste eveniet, reiciendis ducimus
-              dolorem iusto veniam suscipit repellendus doloribus ratione
-              excepturi ab, a facere praesentium quidem commodi voluptate
-              maiores tenetur accusantium aperiam consequatur dicta maxime
-              delectus, neque unde. Illo provident molestiae labore doloremque
-              earum nisi quam. Reprehenderit qui quod dolore aut nesciunt
-              nostrum mollitia laboriosam praesentium in quo id adipisci minima,
-              magnam dicta eligendi quia voluptatem repellat. Consectetur,
-              tempora adipisci dolorem delectus eius quod minus illo a maxime
-              numquam, necessitatibus debitis, optio explicabo sit enim dolore
-              aliquid nostrum praesentium placeat quaerat! Cumque sit minus
-              voluptatibus officiis quo exercitationem obcaecati nulla ducimus
-              non mollitia? Velit perferendis ratione nihil inventore provident
-              esse, sapiente cum aut. Ad cumque quasi dicta velit molestias.
-              Laborum mollitia, totam modi nostrum ipsam repudiandae cupiditate
-              incidunt nisi vero soluta expedita maiores ipsa magni inventore
-              obcaecati quod temporibus eum cum ratione voluptatem corrupti vel
-              rem? Culpa, minus vero?
-            </p>
-          </div> */}
-
           <div className="text-primary-300 mb-10">
             <h3 className="font-bold text-2xl">Available Packagings</h3>
 
@@ -571,21 +425,6 @@ const ProductDetail = () => {
                   </div>
                 </div>
               ))}
-              {/* <div>
-                <img
-                  src="/images/big-size.png"
-                  alt="Small Size"
-                  className="w-full aspect-square object-contain object-bottom"
-                />
-                <div className="bg-gray-200 text-primary-300 font-bold text-center py-2 rounded-full my-3 text-2xl">
-                  1.8 Kg SET
-                </div>
-                <div>
-                  1 Kg Resin
-                  <br />
-                  800 Grams Hardener
-                </div>
-              </div> */}
             </div>
           </div>
 
@@ -593,65 +432,6 @@ const ProductDetail = () => {
             className="text-primary-300 mb-10 editor-content"
             dangerouslySetInnerHTML={{ __html: product?.description3 }}
           ></div>
-
-          {/* <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">How To Use</h3>
-            <p className="text-justify">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-              voluptate natus ipsa praesentium magni pariatur nemo, culpa hic
-              corporis quas nam, cupiditate quis accusamus obcaecati, non
-              corrupti recusandae! Quae eaque cupiditate officia reprehenderit,
-              nam ea quisquam consequuntur, beatae numquam possimus fugit minima
-              aspernatur aut ipsa iste error quas! Ipsa blanditiis repudiandae
-              libero delectus aspernatur molestiae, est dolorum necessitatibus
-              quis et temporibus vero dolorem error eaque explicabo labore qui
-              placeat a, voluptate at voluptatem esse? Soluta voluptates totam
-              vitae eos! Facere, architecto excepturi! Totam eligendi iste
-              laudantium earum, enim doloremque magni doloribus voluptate
-              impedit molestiae illum assumenda officia laboriosam? Autem, nobis
-              commodi! Natus dolores exercitationem excepturi et quibusdam odit
-              ipsam enim consequuntur deserunt, reiciendis repellat quisquam
-              ullam velit incidunt recusandae mollitia provident reprehenderit
-              deleniti nihil sapiente? Porro tempore modi perspiciatis odit
-              doloremque quasi ipsum excepturi? Sapiente reiciendis aliquid esse
-              atque repellat quo eligendi commodi laudantium error, deleniti
-              quis voluptatibus blanditiis non, hic dolor accusamus perspiciatis
-              sint. Sit, et voluptas, atque obcaecati vero, veritatis culpa
-              vitae voluptate explicabo modi asperiores. Sit, natus totam, omnis
-              consequatur aut sapiente explicabo voluptatem ullam corporis
-              doloremque nulla exercitationem provident? At ducimus doloremque
-              libero praesentium eos exercitationem, aliquid accusantium
-              nesciunt dolore accusamus laudantium aut corrupti magni
-              consequuntur.
-            </p>
-          </div>
-
-          <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Shelf Life</h3>
-            <p>2 Years from Date of Manufacturing</p>
-          </div>
-
-          <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Storage</h3>
-            <p className="text-justify">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Aspernatur nostrum porro cum voluptate tempore vitae perspiciatis
-              unde debitis alias corporis aut nihil incidunt impedit nulla,
-              exercitationem recusandae suscipit optio labore.
-            </p>
-          </div>
-
-          <div className="text-primary-300 mb-10">
-            <h3 className="font-bold text-2xl">Handling Precaution</h3>
-            <p className="text-justify">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempore
-              sequi ut minus corrupti? Eos corporis inventore delectus dolore
-              omnis dolores quidem voluptates, iure, velit quas magni dolor ipsa
-              sed minima eius, praesentium suscipit deserunt cumque debitis
-              reiciendis autem? Veritatis, maiores aut. Tenetur ducimus quidem
-              perspiciatis distinctio exercitationem culpa vero nulla?
-            </p>
-          </div> */}
 
           <div>
             <HomeHeading>Video Related To Products</HomeHeading>
@@ -785,7 +565,11 @@ const ProductDetail = () => {
                   <p>Share your thoughts with other customers</p>
 
                   <div className="mt-3 grid">
-                    <button className="text-2xl bg-primary-300 text-white py-5 rounded-lg hover:bg-primary-600">
+                    <button
+                      type="button"
+                      className="text-2xl bg-primary-300 text-white py-5 rounded-lg hover:bg-primary-600"
+                      onClick={handleWriteReview}
+                    >
                       Write a Product Review
                     </button>
                   </div>
@@ -796,9 +580,11 @@ const ProductDetail = () => {
                   <div className="grid grid-cols-12">
                     <div className="flex col-span-8 gap-5">
                       <div className="lg:text-2xl font-bold pb-2 border-b-4 border-primary-300">
-                        Reviews (367)
+                        Reviews ({product?.reviews?.length || 0})
                       </div>
-                      <div className="lg:text-2xl  pb-2">Questions (74)</div>
+                      <div className="lg:text-2xl  pb-2">
+                        Questions ({product?.faqs?.length || 0})
+                      </div>
                     </div>
                     <div className="col-span-4">
                       <h3 className="lg:text-2xl font-bold pb-2">Sort</h3>
@@ -880,7 +666,99 @@ const ProductDetail = () => {
                   </div>
                 </div>
 
-                <div className="grid lg:grid-cols-12 lg:gap-5 border-t pt-10 mb-10">
+                {product?.reviews?.map((review) => (
+                  <div
+                    className="grid lg:grid-cols-12 lg:gap-5 border-t pt-10 mb-10"
+                    key={review.id}
+                  >
+                    <div className="lg:col-span-3 lg:text-center flex gap-3 lg:block items-center">
+                      <img
+                        src="/images/user.png"
+                        alt=""
+                        className="size-20 lg:size-36 inline"
+                      />
+                      <div className="grow font-semibold">
+                        <div className="text-primary-300">
+                          {review?.user?.name}
+                        </div>
+                        <div className="text-pink-600 flex items-center lg:justify-center gap-1">
+                          Verified Buyer <BiSolidCheckCircle size={20} />
+                        </div>
+                        <div className="flex lg:justify-center text-xl">
+                          <StarRating rating={review.rating} />
+                        </div>
+                        <div className="text-xs lg:text-base text-gray-400">
+                          {moment(review.created_at).fromNow()}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="lg:col-span-9 text-primary-300 mt-2 lg:mt-0">
+                      {/* <h5 className="text-base lg:text-lg font-bold">
+                        Best Quality with No Fumes
+                      </h5> */}
+                      <div className="text-xs lg:text-base lg:text-justify mb-3 font-semibold">
+                        {review.review}
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-2 mb-3">
+                        {/* {JSON.stringify(review.images)} */}
+                        {review?.images?.map((img) => (
+                          <div>
+                            <img
+                              src={`/storage/${img.src}`}
+                              alt=""
+                              className="aspect-square bg-gray-200 rounded object-contain"
+                            />
+                          </div>
+                        ))}
+                        {/* <div>
+                          <img
+                            src="/images/product2.png"
+                            alt=""
+                            className="aspect-square bg-gray-200 rounded object-contain"
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src="/images/product2.png"
+                            alt=""
+                            className="aspect-square bg-gray-200 rounded object-contain"
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src="/images/product2.png"
+                            alt=""
+                            className="aspect-square bg-gray-200 rounded object-contain"
+                          />
+                        </div> */}
+                        {/* {!isMobile && (
+                          <div>
+                            <img
+                              src="/images/product2.png"
+                              alt=""
+                              className="aspect-square bg-gray-200 rounded object-contain"
+                            />
+                          </div>
+                        )} */}
+                      </div>
+
+                      <div className="flex items-center gap-3 font-bold">
+                        <button className="flex items-center gap-2 rounded-lg bg-pink-600 hover:bg-pink-300 text-white lg:py-2 py-1 lg:px-5 px-2 text-xs lg:text-2xl">
+                          Helpful <FaThumbsUp />
+                        </button>
+                        <div className="grow text-pink-600 text-xs lg:text-base">
+                          56 peoples found this helpful
+                        </div>
+                        <button className="bg-primary-300 text-white hover:bg-primary-600 lg:px-5 px-2 lg:py-2 py-1 flex items-center text-xs lg:text-2xl rounded-lg gap-2">
+                          Share <BiShareAlt />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* <div className="grid lg:grid-cols-12 lg:gap-5 border-t pt-10 mb-10">
                   <div className="lg:col-span-3 lg:text-center flex gap-3 lg:block items-center">
                     <img
                       src="/images/user.png"
@@ -1234,96 +1112,7 @@ const ProductDetail = () => {
                       </button>
                     </div>
                   </div>
-                </div>
-
-                <div className="grid lg:grid-cols-12 lg:gap-5 border-t pt-10 mb-10">
-                  <div className="lg:col-span-3 lg:text-center flex gap-3 lg:block items-center">
-                    <img
-                      src="/images/user.png"
-                      alt=""
-                      className="size-20 lg:size-36 inline"
-                    />
-                    <div className="grow font-semibold">
-                      <div className="text-primary-300">Sudanshu</div>
-                      <div className="text-pink-600 flex items-center lg:justify-center gap-1">
-                        Verified Buyer <BiSolidCheckCircle size={20} />
-                      </div>
-                      <div className="flex text-orange-400 lg:justify-center text-xl">
-                        <BiSolidStar />
-                        <BiSolidStar />
-                        <BiSolidStar />
-                        <BiSolidStar />
-                        <BiSolidStar />
-                      </div>
-                      <div className="text-xs lg:text-base text-gray-400">
-                        1 week ago
-                      </div>
-                    </div>
-                  </div>
-                  <div className="lg:col-span-9 text-primary-300 mt-2 lg:mt-0">
-                    <h5 className="text-base lg:text-lg font-bold">
-                      Best Quality with No Fumes
-                    </h5>
-                    <p className="text-xs lg:text-base lg:text-justify mb-3 font-semibold">
-                      Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                      Maxime, eos numquam quis sunt saepe voluptas? Similique
-                      voluptate ad blanditiis rem ipsam. Debitis, nam quo.
-                      Commodi quas dolore voluptatibus nobis eos!
-                    </p>
-
-                    <div className="grid grid-cols-4 gap-2 mb-3">
-                      <div>
-                        <img
-                          src="/images/product2.png"
-                          alt=""
-                          className="aspect-square bg-gray-200 rounded object-contain"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="/images/product2.png"
-                          alt=""
-                          className="aspect-square bg-gray-200 rounded object-contain"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="/images/product2.png"
-                          alt=""
-                          className="aspect-square bg-gray-200 rounded object-contain"
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src="/images/product2.png"
-                          alt=""
-                          className="aspect-square bg-gray-200 rounded object-contain"
-                        />
-                      </div>
-                      {!isMobile && (
-                        <div>
-                          <img
-                            src="/images/product2.png"
-                            alt=""
-                            className="aspect-square bg-gray-200 rounded object-contain"
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3 font-bold">
-                      <button className="flex items-center gap-2 rounded-lg bg-pink-600 hover:bg-pink-300 text-white lg:py-2 py-1 lg:px-5 px-2 text-xs lg:text-2xl">
-                        Helpful <FaThumbsUp />
-                      </button>
-                      <div className="grow text-pink-600 text-xs lg:text-base">
-                        56 peoples found this helpful
-                      </div>
-                      <button className="bg-primary-300 text-white hover:bg-primary-600 lg:px-5 px-2 lg:py-2 py-1 flex items-center text-xs lg:text-2xl rounded-lg gap-2">
-                        Share <BiShareAlt />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                </div> */}
 
                 {/* <div className="grid grid-cols-12 gap-5 border-t pt-10 mb-10">
                   <div className="col-span-3 text-center">
